@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///home/user/carwash/src/app/page.tsx"],"sourcesContent":["\n'use client';\n\n// This component is now much simpler.\n// The main logic is in the root layout.\n// This component will be rendered by the layout for the home page.\nimport { CarWashApp } from '@/components/car-wash-app';\n\nexport default function Home() {\n  return <CarWashApp />;\n}\n"],"names":[],"mappings":";;;;;AAGA,sCAAsC;AACtC,wCAAwC;AACxC,mEAAmE;AACnE;AALA;;;AAOe,SAAS;IACtB,qBAAO,6LAAC,yJAAU;;;;;AACpB;KAFwB","debugId":null}}]
+}
