@@ -19,9 +19,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   devIndicators: {
-    allowedDevOrigins: [
-      '*.cloudworkstations.dev',
-    ],
+    allowedDevOrigins: ['https://3000-firebase-carwash-1760364878602.cluster-fbfjltn375c6wqxlhoehbz44sk.cloudworkstations.dev'],
   },
 };
 

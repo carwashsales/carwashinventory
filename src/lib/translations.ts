@@ -2,6 +2,8 @@
 export const translations = {
   ar: {
     "app-title": "خدمة غسيل السيارات",
+    "dashboard": "لوحة التحكم",
+    "inventory-and-expenses": "المخزون والمصروفات",
     "new-service-tab-text": "خدمة جديدة",
     "reports-tab-text": "التقارير",
     "support-tab-text": "الدعم",
@@ -170,10 +172,34 @@ export const translations = {
     "delete-service-type-description": "هذا الإجراء لا يمكن التراجع عنه. سيتم حذف نوع الخدمة هذا نهائيًا.",
     "cancel-btn": "إلغاء",
     "delete-btn": "حذف",
-    "daily-report-tab-title": "التقرير اليومي"
+    "daily-report-tab-title": "التقرير اليومي",
+    "expense-management-title": "إدارة المصروفات",
+    "add-expense-title": "إضافة مصروف جديد",
+    "expense-description-placeholder": "وصف المصروف",
+    "expense-amount-placeholder": "المبلغ",
+    "add-expense-btn": "إضافة مصروف",
+    "expenses-list-title": "قائمة المصروفات",
+    "table-header-description": "الوصف",
+    "table-header-amount": "المبلغ",
+    "no-expenses-text": "لم يتم تسجيل أي مصروفات بعد.",
+    "inventory-management-title": "إدارة المخزون",
+    "add-inventory-item-title": "إضافة عنصر جديد للمخزون",
+    "item-name-placeholder": "اسم العنصر",
+    "quantity-placeholder": "الكمية",
+    "price-placeholder": "سعر الوحدة",
+    "add-item-btn": "إضافة عنصر",
+    "inventory-list-title": "قائمة المخزون",
+    "table-header-item": "العنصر",
+    "table-header-quantity": "الكمية",
+    "no-inventory-items-text": "لم يتم إضافة أي عناصر في المخزون بعد.",
+    "total-revenue": "إجمالي الدخل",
+    "total-expenses": "إجمالي المصروفات",
+    "net-profit": "صافي الربح"
   },
   en: {
     "app-title": "Car Wash Service",
+    "dashboard": "Dashboard",
+    "inventory-and-expenses": "Inventory & Expenses",
     "new-service-tab-text": "New Service",
     "reports-tab-text": "Reports",
     "support-tab-text": "Support",
@@ -342,9 +368,30 @@ export const translations = {
     "delete-service-type-description": "This action cannot be undone. This will permanently delete the service type.",
     "cancel-btn": "Cancel",
     "delete-btn": "Delete",
-    "daily-report-tab-title": "Daily Report"
+    "daily-report-tab-title": "Daily Report",
+    "expense-management-title": "Expense Management",
+    "add-expense-title": "Add New Expense",
+    "expense-description-placeholder": "Expense Description",
+    "expense-amount-placeholder": "Amount",
+    "add-expense-btn": "Add Expense",
+    "expenses-list-title": "Expenses List",
+    "table-header-description": "Description",
+    "table-header-amount": "Amount",
+    "no-expenses-text": "No expenses recorded yet.",
+    "inventory-management-title": "Inventory Management",
+    "add-inventory-item-title": "Add New Inventory Item",
+    "item-name-placeholder": "Item Name",
+    "quantity-placeholder": "Quantity",
+    "price-placeholder": "Price per item",
+    "add-item-btn": "Add Item",
+    "inventory-list-title": "Inventory List",
+    "table-header-item": "Item",
+    "table-header-quantity": "Quantity",
+    "no-inventory-items-text": "No inventory items added yet.",
+    "total-revenue": "Total Revenue",
+    "total-expenses": "Total Expenses",
+    "net-profit": "Net Profit"
   }
 }
 
 export type Language = keyof typeof translations;
-

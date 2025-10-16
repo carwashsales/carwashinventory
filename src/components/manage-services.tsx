@@ -31,6 +31,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
+import { translations } from '@/lib/translations';
 
 const carSizes = ['small', 'medium', 'big', 'long-gmc', 'microbus', 'long-coaster'];
 
@@ -123,17 +124,17 @@ const ServiceTypeForm = ({ config, onFinished }: { config: ServiceConfig | null;
               <div key={size} className="grid grid-cols-1 gap-y-2">
                  <div className="grid grid-cols-2 gap-x-4">
                     <div>
-                      <Label>{t('price-for-size-label').replace('{size}', t(`${size}-car`))}</Label>
+                      <Label>{t('price-for-size-label').replace('{size}', t(`${size}-car` as keyof typeof translations.en))}</Label>
                       <Input type="number" value={formData.prices?.[size]?.price || ''} onChange={e => handlePriceChange(size, 'price', e.target.value)} />
                     </div>
                     <div>
-                      <Label>{t('commission-for-size-label').replace('{size}', t(`${size}-car`))}</Label>
+                      <Label>{t('commission-for-size-label').replace('{size}', t(`${size}-car` as keyof typeof translations.en))}</Label>
                       <Input type="number" value={formData.prices?.[size]?.commission || ''} onChange={e => handlePriceChange(size, 'commission', e.target.value)} />
                     </div>
                  </div>
                 {formData.hasCoupon && (
                    <div className="col-span-2">
-                    <Label>{t('coupon-commission-label')} ({t(`${size}-car`)})</Label>
+                    <Label>{t('coupon-commission-label')} ({t(`${size}-car` as keyof typeof translations.en)})</Label>
                     <Input type="number" value={formData.prices?.[size]?.couponCommission || ''} onChange={e => handlePriceChange(size, 'couponCommission', e.target.value)} />
                   </div>
                 )}

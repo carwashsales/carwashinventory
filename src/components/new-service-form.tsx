@@ -145,7 +145,7 @@ export function NewServiceForm() {
     const isPaid = paymentType !== 'not-paid';
     
     const servicePayload: Omit<Service, 'id' | 'timestamp'> = {
-      userId: user.uid,
+      userId: user.id,
       serviceType,
       carSize: carSize || null,
       staffId: selectedStaff.id,

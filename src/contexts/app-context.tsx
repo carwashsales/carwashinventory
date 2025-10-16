@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import { createContext, useState, useEffect, useCallback } from 'react';
 import { translations, type Language } from '@/lib/translations';
-import type { Service, Staff, ServiceConfig } from '@/types';
+import type { Service, Staff, ServiceConfig, InventoryItem, Expense } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabaseClient';
 import { isSameDay } from 'date-fns';
@@ -33,6 +33,15 @@ export interface AppContextType {
   addServiceConfig: (config: Omit<ServiceConfig, 'id' | 'userId'>) => Promise<void>;
   updateServiceConfig: (config: ServiceConfig) => Promise<void>;
   removeServiceConfig: (id: string) => Promise<void>;
+  inventoryItems: InventoryItem[];
+  addInventoryItem: (item: Omit<InventoryItem, 'id' | 'userId'>) => Promise<InventoryItem | undefined>;
+  updateInventoryItem: (id: string, item: Omit<InventoryItem, 'id' | 'userId'>) => Promise<void>;
+  removeInventoryItem: (id: string) => Promise<void>;
+  expenses: Expense[];
+  addExpense: (expense: Omit<Expense, 'id' | 'userId' | 'date'>) => Promise<Expense | undefined>;
+  removeExpense: (id: string) => Promise<void>;
+  loadExpenses: (currentUserId: string) => Promise<void>;
+  loadAllData: () => Promise<void>;
 }
 
 export const AppContext = createContext<AppContextType | null>(null);
@@ -44,6 +53,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [allServices, setAllServices] = useState<Service[]>([]);
   const [staff, setStaff] = useState<Staff[]>([]);
   const [serviceConfigs, setServiceConfigs] = useState<ServiceConfig[]>([]);
+  const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isInitialized, setIsInitialized] = useState(false);
   const { toast } = useToast();
@@ -79,7 +90,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       
       if (error) throw error;
 
-      if (data.length === 0) {
+      const formattedData = data.map(config => ({ ...config, id: String(config.id) }));
+
+      if (formattedData.length === 0) {
         const enTranslations = translations.en;
         const arTranslations = translations.ar;
         
@@ -99,11 +112,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
         const { data: insertedData, error: insertError } = await supabase.from('service_configs').insert(newConfigsData).select();
         if (insertError) throw insertError;
 
-        setServiceConfigs(insertedData);
+        const formattedInsertedData = insertedData.map(config => ({ ...config, id: String(config.id) }));
+        setServiceConfigs(formattedInsertedData);
         toast({ title: t('service-type-added-success')});
-        return insertedData;
+        return formattedInsertedData;
       } else {
-        const configs = data.sort((a, b) => a.name.localeCompare(b.name));
+        const configs = formattedData.sort((a, b) => a.name.localeCompare(b.name));
         setServiceConfigs(configs);
         return configs;
       }
@@ -136,7 +150,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     showLoading();
     try {
         const { id, ...configData } = config;
-        const { error } = await supabase.from('service_configs').update(configData).eq('id', id);
+        const { error } = await supabase.from('service_configs').update(configData).eq('id', Number(id));
         if (error) throw error;
         await loadServiceConfigs(user.id);
         toast({ title: t('service-type-updated-success')});
@@ -152,7 +166,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (!user) return;
     showLoading();
     try {
-        const { error } = await supabase.from('service_configs').delete().eq('id', id);
+        const { error } = await supabase.from('service_configs').delete().eq('id', Number(id));
         if (error) throw error;
         await loadServiceConfigs(user.id);
         toast({ title: t('service-type-removed-success')});
@@ -209,6 +223,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setServices([]);
       setAllServices([]);
       setServiceConfigs([]);
+      setInventoryItems([]);
+      setExpenses([]);
     } catch (error) {
       console.error(error);
     } finally {
@@ -224,7 +240,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         .eq('userId', currentUserId)
         .order('name');
       if (error) throw error;
-      setStaff(data);
+      const formattedStaff = data.map(s => ({ ...s, id: String(s.id) }));
+      setStaff(formattedStaff);
     } catch (error) {
       console.error('Error loading staff:', error);
       setStaff([]);
@@ -251,7 +268,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (!user) return;
     showLoading();
     try {
-      const { error } = await supabase.from('staff').delete().eq('id', id);
+      const { error } = await supabase.from('staff').delete().eq('id', Number(id));
       if (error) throw error;
       await loadStaff(user.id);
       toast({ title: t('staff-removed-success') });
@@ -274,9 +291,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
         .order('timestamp', { ascending: false });
       if (error) throw error;
 
-      setAllServices(data as Service[]);
+      const formattedServices = data.map(s => ({ ...s, id: String(s.id), staffId: String(s.staffId) }));
+      setAllServices(formattedServices as Service[]);
       
-      const todayServices = (data as Service[])
+      const todayServices = (formattedServices as Service[])
         .filter(service => isSameDay(new Date(service.timestamp), new Date()))
         .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
       setServices(todayServices);
@@ -305,13 +323,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
       
       const serviceToSave = {
         ...serviceData,
+        staffId: Number(serviceData.staffId),
         timestamp: now,
       };
 
       const { data, error } = await supabase.from('services').insert(serviceToSave).select();
       if (error) throw error;
 
-      const newServiceForState = data[0] as Service;
+      const newServiceForState = { ...data[0], id: String(data[0].id), staffId: String(data[0].staffId) } as Service;
       
       const updatedAllServices = [newServiceForState, ...allServices];
       setAllServices(updatedAllServices);
@@ -329,13 +348,148 @@ export function AppProvider({ children }: { children: ReactNode }) {
       hideLoading();
     }
   };
+
+  const loadInventoryItems = useCallback(async (currentUserId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('inventory_items')
+        .select('*')
+        .eq('userId', currentUserId)
+        .order('name');
+      if (error) throw error;
+      const formattedItems = data.map(i => ({ ...i, id: String(i.id) }));
+      setInventoryItems(formattedItems);
+    } catch (error) {
+      console.error('Error loading inventory items:', error);
+      setInventoryItems([]);
+    }
+  }, []);
+
+  const addInventoryItem = async (item: Omit<InventoryItem, 'id' | 'userId'>) => {
+    if (!user) return;
+    showLoading();
+    try {
+      const { data, error } = await supabase.from('inventory_items').insert({ ...item, userId: user.id }).select();
+      if (error) throw error;
+      const newItem = { ...data[0], id: String(data[0].id) };
+      await loadInventoryItems(user.id);
+      toast({ title: t('inventory-item-added-success') });
+      return newItem;
+    } catch (error) {
+      console.error('Error adding inventory item:', error);
+      toast({ title: t('inventory-item-added-failed'), variant: 'destructive' });
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const updateInventoryItem = async (id: string, item: Omit<InventoryItem, 'id' | 'userId'>) => {
+    if (!user) return;
+    showLoading();
+    try {
+      const { error } = await supabase.from('inventory_items').update(item).eq('id', Number(id));
+      if (error) throw error;
+      await loadInventoryItems(user.id);
+      toast({ title: t('inventory-item-updated-success') });
+    } catch (error) {
+      console.error('Error updating inventory item:', error);
+      toast({ title: t('inventory-item-updated-failed'), variant: 'destructive' });
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const removeInventoryItem = async (id: string) => {
+    if (!user) return;
+    showLoading();
+    try {
+      const { error } = await supabase.from('inventory_items').delete().eq('id', Number(id));
+      if (error) throw error;
+      await loadInventoryItems(user.id);
+      toast({ title: t('inventory-item-removed-success') });
+    } catch (error) {
+      console.error('Error removing inventory item:', error);
+      toast({ title: t('inventory-item-removed-failed'), variant: 'destructive' });
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const loadExpenses = useCallback(async (currentUserId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('expenses')
+        .select('*')
+        .eq('userId', currentUserId)
+        .order('date', { ascending: false });
+      if (error) throw error;
+      const formattedExpenses = data.map(e => ({ ...e, id: String(e.id) }));
+      setExpenses(formattedExpenses);
+    } catch (error) {
+      console.error('Error loading expenses:', error);
+      setExpenses([]);
+    }
+  }, []);
+
+  const addExpense = async (expense: Omit<Expense, 'id' | 'userId' | 'date'>) => {
+    if (!user) return;
+    showLoading();
+    try {
+      const { data, error } = await supabase.from('expenses').insert({ ...expense, userId: user.id, date: new Date().toISOString() }).select();
+      if (error) throw error;
+      const newExpense = { ...data[0], id: String(data[0].id) };
+      await loadExpenses(user.id);
+      toast({ title: t('expense-added-success') });
+      return newExpense;
+    } catch (error) {
+      console.error('Error adding expense:', error);
+      toast({ title: t('expense-added-failed'), variant: 'destructive' });
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const removeExpense = async (id: string) => {
+    if (!user) return;
+    showLoading();
+    try {
+      const { error } = await supabase.from('expenses').delete().eq('id', Number(id));
+      if (error) throw error;
+      await loadExpenses(user.id);
+      toast({ title: t('expense-removed-success') });
+    } catch (error) {
+      console.error('Error removing expense:', error);
+      toast({ title: t('expense-removed-failed'), variant: 'destructive' });
+    } finally {
+      hideLoading();
+    }
+  };
   
+  const loadAllData = useCallback(async () => {
+    if (!user) return;
+    showLoading();
+    try {
+      await Promise.all([
+        loadAllServices(),
+        loadInventoryItems(user.id),
+        loadExpenses(user.id),
+      ]);
+    } catch (e) {
+        console.error("Failed to load all data", e);
+        toast({ title: 'Failed to load all data', variant: 'destructive' });
+    } finally {
+        hideLoading();
+    }
+  }, [user, loadAllServices, loadInventoryItems, loadExpenses, toast]);
+
   const loadInitialData = useCallback(async (currentUser: User) => {
     showLoading();
     try {
         await Promise.all([
             loadStaff(currentUser.id),
             loadServiceConfigs(currentUser.id),
+            loadInventoryItems(currentUser.id),
+            loadExpenses(currentUser.id),
         ]);
         const today = new Date();
         const startOfDay = new Date(today.setHours(0, 0, 0, 0)).toISOString();
@@ -350,7 +504,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
             .order('timestamp', { ascending: false });
 
         if (error) throw error;
-        setServices(data as Service[]);
+        const formattedServices = data.map(s => ({ ...s, id: String(s.id), staffId: String(s.staffId) }));
+        setServices(formattedServices as Service[]);
 
     } catch (e) {
         console.error("Failed to load initial data", e);
@@ -358,7 +513,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     } finally {
         hideLoading();
     }
-  }, [loadStaff, loadServiceConfigs, toast]);
+  }, [loadStaff, loadServiceConfigs, loadInventoryItems, loadExpenses, toast]);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
@@ -373,6 +528,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setServices([]);
         setAllServices([]);
         setServiceConfigs([]);
+        setInventoryItems([]);
+        setExpenses([]);
       }
       setIsInitialized(true);
       setIsLoading(false);
@@ -409,6 +566,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
     addServiceConfig,
     updateServiceConfig,
     removeServiceConfig,
+    inventoryItems,
+    addInventoryItem,
+    updateInventoryItem,
+    removeInventoryItem,
+    expenses,
+    addExpense,
+    removeExpense,
+    loadExpenses,
+    loadAllData,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

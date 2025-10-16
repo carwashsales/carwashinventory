@@ -1,6 +1,5 @@
 'use client';
 
-import { Header } from '@/components/header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 
@@ -24,7 +23,7 @@ export default function PrivacyPolicyPage() {
 
             <h2 className="text-xl font-semibold text-foreground pt-4">Introduction</h2>
             <p>
-              Welcome to Siyara Wasla ("we," "our," "us"). We are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our application.
+              Welcome to Siyara Wasla (&quot;we,&quot; &quot;our,&quot; &quot;us&quot;). We are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our application.
             </p>
 
             <h2 className="text-xl font-semibold text-foreground pt-4">Information We Collect</h2>

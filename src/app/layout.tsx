@@ -32,28 +32,20 @@ function AppContent({ children }: { children: React.ReactNode }) {
     return <SignUpForm onSwitchView={() => setAuthView('login')} />;
   };
 
-  // The logic to determine which page to show
-  // must be careful about `window` object for static export
   let path = '';
   if (typeof window !== 'undefined') {
     path = window.location.pathname;
   }
 
   if (!isAuthenticated) {
-    // Allow access to privacy policy even when not logged in
     if (path.includes('/privacy-policy')) {
       return <>{children}</>;
     }
     return renderAuth();
   }
 
-  // If authenticated, allow access to settings or other pages
-   if (path.includes('/settings') || path.includes('/privacy-policy')) {
-     return <>{children}</>;
-   }
-
-  // For any other authenticated route, show the main dashboard
-  return <CarWashApp />;
+  // If authenticated, render the children for all pages
+  return <>{children}</>;
 }
 
 

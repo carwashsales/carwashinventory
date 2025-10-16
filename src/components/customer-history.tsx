@@ -98,7 +98,6 @@ export function CustomerHistory() {
   const handleSendToSelected = () => {
     if (selectedCustomers.size === 0) return;
     const message = t('whatsapp-bulk-message');
-    const contacts = Array.from(selectedCustomers).join(',');
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };

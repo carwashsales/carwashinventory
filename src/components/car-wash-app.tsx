@@ -2,7 +2,7 @@
 'use client';
 
 import { useApp } from '@/hooks/use-app';
-import { Header } from '@/components/header';
+import { AppShell } from '@/components/app-shell';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { NewServiceForm } from '@/components/new-service-form';
 import { ReportsTab } from '@/components/reports-tab';
@@ -12,10 +12,8 @@ export function CarWashApp() {
   const { t } = useApp();
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Header />
-      <main className="flex-1">
-        <Tabs defaultValue="new-service" className="container mx-auto py-6">
+    <AppShell>
+        <Tabs defaultValue="new-service" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="new-service">{t('new-service-tab-text')}</TabsTrigger>
             <TabsTrigger value="reports">{t('reports-tab-text')}</TabsTrigger>
@@ -31,7 +29,6 @@ export function CarWashApp() {
             <ManageServices />
           </TabsContent>
         </Tabs>
-      </main>
-    </div>
+    </AppShell>
   );
 }

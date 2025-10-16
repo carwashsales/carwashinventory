@@ -45,3 +45,21 @@ export type ServiceConfig = {
 export type ServiceTypesConfig = {
   [key:string]: Omit<ServiceConfig, 'id' | 'name' | 'userId' | 'nameAr' | 'nameEn'>;
 };
+
+export type InventoryItem = {
+  id: string;
+  name: string;
+  nameAr?: string;
+  quantity: number;
+  price: number;
+  unit?: string;
+  userId: string;
+};
+
+export type Expense = {
+  id: string;
+  description: string;
+  amount: number;
+  date: string;
+  userId: string;
+};
