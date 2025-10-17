@@ -207,7 +207,13 @@ const translations = {
         "no-inventory-items-text": "لم يتم إضافة أي عناصر في المخزون بعد.",
         "total-revenue": "إجمالي الدخل",
         "total-expenses": "إجمالي المصروفات",
-        "net-profit": "صافي الربح"
+        "net-profit": "صافي الربح",
+        "todays-sales-label": "مبيعات اليوم",
+        "from-yesterday-label": "عن أمس",
+        "washes-completed-label": "الغسلات المكتملة",
+        "more-details-label": "المزيد من التفاصيل",
+        "payment-details-label": "تفاصيل الدفع",
+        "washes-completed-today": "غسلة مكتملة اليوم"
     },
     en: {
         "app-title": "Car Wash Service",
@@ -394,8 +400,8 @@ const translations = {
         "inventory-management-title": "Inventory Management",
         "add-inventory-item-title": "Add New Inventory Item",
         "item-name-placeholder": "Item Name",
-        "quantity-placeholder": "Quantity",
-        "price-placeholder": "Price per item",
+        'quantity-placeholder': 'Quantity',
+        'price-placeholder': 'Price per item',
         "add-item-btn": "Add Item",
         "inventory-list-title": "Inventory List",
         "table-header-item": "Item",
@@ -403,7 +409,13 @@ const translations = {
         "no-inventory-items-text": "No inventory items added yet.",
         "total-revenue": "Total Revenue",
         "total-expenses": "Total Expenses",
-        "net-profit": "Net Profit"
+        "net-profit": "Net Profit",
+        "todays-sales-label": "Today's Sales",
+        "from-yesterday-label": "from yesterday",
+        "washes-completed-label": "Washes Completed",
+        "more-details-label": "More details",
+        "payment-details-label": "Payment Details",
+        "washes-completed-today": "washes completed today"
     }
 };
 }),

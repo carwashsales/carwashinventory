@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///home/user/carwash/src/app/new-service/page.tsx"],"sourcesContent":["'use client';\n\nimport { CarWashApp } from '@/components/car-wash-app';\n\nexport default function NewServicePage() {\n  return <CarWashApp />;\n}\n"],"names":[],"mappings":";;;;;AAEA;AAFA;;;AAIe,SAAS;IACtB,qBAAO,6LAAC,yJAAU;;;;;AACpB;KAFwB","debugId":null}}]
+}

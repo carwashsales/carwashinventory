@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///home/user/carwash/src/components/app-shell.tsx"],"sourcesContent":["\n'use client';\n\nexport function AppShell({ children }: { children: React.ReactNode }) {\n  return (\n    <div className=\"flex min-h-screen flex-col\">\n      <main className=\"flex-1 container mx-auto py-6\">\n        {children}\n      </main>\n    </div>\n  );\n}\n"],"names":[],"mappings":";;;;;AACA;;AAEO,SAAS,SAAS,EAAE,QAAQ,EAAiC;IAClE,qBACE,8OAAC;QAAI,WAAU;kBACb,cAAA,8OAAC;YAAK,WAAU;sBACb;;;;;;;;;;;AAIT","debugId":null}},
+    {"offset": {"line": 32, "column": 0}, "map": {"version":3,"sources":["file:///home/user/carwash/src/components/car-wash-app.tsx"],"sourcesContent":["\n'use client';\n\nimport { useApp } from '@/hooks/use-app';\nimport { AppShell } from '@/components/app-shell';\n\nexport function CarWashApp({ children }: { children: React.ReactNode }) {\n  const { t } = useApp();\n\n  return (\n    <AppShell>\n        {children}\n    </AppShell>\n  );\n}\n"],"names":[],"mappings":";;;;;AAGA;AACA;AAHA;;;;AAKO,SAAS,WAAW,EAAE,QAAQ,EAAiC;IACpE,MAAM,EAAE,CAAC,EAAE,GAAG,IAAA,oIAAM;IAEpB,qBACE,8OAAC,8IAAQ;kBACJ;;;;;;AAGT","debugId":null}},
+    {"offset": {"line": 57, "column": 0}, "map": {"version":3,"sources":["file:///home/user/carwash/src/app/new-service/page.tsx"],"sourcesContent":["'use client';\n\nimport { CarWashApp } from '@/components/car-wash-app';\n\nexport default function NewServicePage() {\n  return <CarWashApp />;\n}\n"],"names":[],"mappings":";;;;;AAEA;AAFA;;;AAIe,SAAS;IACtB,qBAAO,8OAAC,sJAAU;;;;;AACpB","debugId":null}}]
+}

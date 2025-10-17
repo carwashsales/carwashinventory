@@ -17,10 +17,10 @@ export function Header() {
       <header className="sticky top-0 z-10 bg-card/80 backdrop-blur-sm shadow-sm">
         <div className="container mx-auto flex items-center justify-between p-4">
           <div className="flex items-center gap-6">
-            <h1 className="text-xl font-bold text-primary">
-              <Link href="/">{t('app-title')}</Link>
-            </h1>
             <nav className="flex items-center gap-4">
+              <Link href="/new-service" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
+                {t('new-service')}
+              </Link>
               <Link href="/dashboard" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
                 {t('dashboard')}
               </Link>

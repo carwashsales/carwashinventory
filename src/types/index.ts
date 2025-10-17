@@ -1,3 +1,4 @@
+
 export type Staff = {
   id: string;
   name: string;
@@ -54,6 +55,8 @@ export type InventoryItem = {
   price: number;
   unit?: string;
   userId: string;
+  purchaseDate?: string;
+  lifespanDays?: number;
 };
 
 export type Expense = {

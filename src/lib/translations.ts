@@ -194,7 +194,17 @@ export const translations = {
     "no-inventory-items-text": "لم يتم إضافة أي عناصر في المخزون بعد.",
     "total-revenue": "إجمالي الدخل",
     "total-expenses": "إجمالي المصروفات",
-    "net-profit": "صافي الربح"
+    "net-profit": "صافي الربح",
+    "todays-sales-label": "مبيعات اليوم",
+    "from-yesterday-label": "عن أمس",
+    "washes-completed-label": "الغسلات المكتملة",
+    "more-details-label": "المزيد من التفاصيل",
+    "payment-details-label": "تفاصيل الدفع",
+    "washes-completed-today": "غسلة مكتملة اليوم",
+    "new-service": "خدمة جديدة",
+    "purchase-date-placeholder": "تاريخ الشراء",
+    "lifespan-days-placeholder": "مدة الصلاحية (أيام)",
+    "remaining-lifespan-label": "الصلاحية المتبقية"
   },
   en: {
     "app-title": "Car Wash Service",
@@ -390,7 +400,17 @@ export const translations = {
     "no-inventory-items-text": "No inventory items added yet.",
     "total-revenue": "Total Revenue",
     "total-expenses": "Total Expenses",
-    "net-profit": "Net Profit"
+    "net-profit": "Net Profit",
+    "todays-sales-label": "Today's Sales",
+    "from-yesterday-label": "from yesterday",
+    "washes-completed-label": "Washes Completed",
+    "more-details-label": "More details",
+    "payment-details-label": "Payment Details",
+    "washes-completed-today": "washes completed today",
+    "new-service": "New Service",
+    "purchase-date-placeholder": "Purchase Date",
+    "lifespan-days-placeholder": "Lifespan (Days)",
+    "remaining-lifespan-label": "Remaining Lifespan"
   }
 }
 

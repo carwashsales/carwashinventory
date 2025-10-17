@@ -4,22 +4,33 @@
 import './globals.css';
 import { AppProvider, AppContext } from '@/contexts/app-context';
 import { Toaster } from '@/components/ui/toaster';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { LoadingOverlay } from '@/components/loading-overlay';
-import { CarWashApp } from '@/components/car-wash-app';
+import { Header } from '@/components/header';
 import { LoginForm } from '@/components/login-form';
 import { SignUpForm } from '@/components/signup-form';
-import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 function AppContent({ children }: { children: React.ReactNode }) {
   const context = useContext(AppContext);
   const [authView, setAuthView] = useState<'login' | 'signup'>('login');
+  const path = usePathname();
 
   if (!context) {
     return <LoadingOverlay />;
   }
 
-  const { isInitialized, isLoading, isAuthenticated } = context;
+  const { isInitialized, isLoading, isAuthenticated, language, setLanguage } = context;
+
+  useEffect(() => {
+    // Set the language to Arabic by default
+    setLanguage('ar');
+  }, [setLanguage]);
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+  }, [language]);
 
   if (!isInitialized || isLoading) {
     return <LoadingOverlay />;
@@ -32,11 +43,6 @@ function AppContent({ children }: { children: React.ReactNode }) {
     return <SignUpForm onSwitchView={() => setAuthView('login')} />;
   };
 
-  let path = '';
-  if (typeof window !== 'undefined') {
-    path = window.location.pathname;
-  }
-
   if (!isAuthenticated) {
     if (path.includes('/privacy-policy')) {
       return <>{children}</>;
@@ -44,10 +50,15 @@ function AppContent({ children }: { children: React.ReactNode }) {
     return renderAuth();
   }
 
-  // If authenticated, render the children for all pages
-  return <>{children}</>;
+  return (
+    <div className="flex min-h-screen flex-col">
+      <Header />
+      <main className="flex-1 container mx-auto py-6">
+        {children}
+      </main>
+    </div>
+  );
 }
-
 
 export default function RootLayout({
   children,
@@ -55,7 +66,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" dir="ltr">
+    <html lang="ar" dir="rtl">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
