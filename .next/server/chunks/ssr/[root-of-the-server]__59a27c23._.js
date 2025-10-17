@@ -217,7 +217,18 @@ const translations = {
         "new-service": "خدمة جديدة",
         "purchase-date-placeholder": "تاريخ الشراء",
         "lifespan-days-placeholder": "مدة الصلاحية (أيام)",
-        "remaining-lifespan-label": "الصلاحية المتبقية"
+        "remaining-lifespan-label": "الصلاحية المتبقية",
+        "product-management-title": "إدارة المنتجات",
+        "add-product-type-title": "إضافة نوع منتج جديد",
+        "product-name-ar-label": "اسم المنتج (بالعربية)",
+        "product-name-en-label": "اسم المنتج (بالإنجليزية)",
+        "add-product-type-btn": "إضافة نوع المنتج",
+        "product-types-list-title": "قائمة أنواع المنتجات",
+        "product-type-added-success": "تمت إضافة نوع المنتج بنجاح.",
+        "product-type-added-failed": "فشل في إضافة نوع المنتج.",
+        "product-type-removed-success": "تمت إزالة نوع المنتج بنجاح.",
+        "product-type-removed-failed": "فشل في إزالة نوع المنتج.",
+        "select-product-type": "اختر المنتج"
     },
     en: {
         "app-title": "Car Wash Service",
@@ -423,7 +434,18 @@ const translations = {
         "new-service": "New Service",
         "purchase-date-placeholder": "Purchase Date",
         "lifespan-days-placeholder": "Lifespan (Days)",
-        "remaining-lifespan-label": "Remaining Lifespan"
+        "remaining-lifespan-label": "Remaining Lifespan",
+        "product-management-title": "Product Management",
+        "add-product-type-title": "Add New Product Type",
+        "product-name-ar-label": "Product Name (Arabic)",
+        "product-name-en-label": "Product Name (English)",
+        "add-product-type-btn": "Add Product Type",
+        "product-types-list-title": "Product Types List",
+        "product-type-added-success": "Product type added successfully.",
+        "product-type-added-failed": "Failed to add product type.",
+        "product-type-removed-success": "Product type removed successfully.",
+        "product-type-removed-failed": "Failed to remove product type.",
+        "select-product-type": "Select Product"
     }
 };
 }),
@@ -813,6 +835,7 @@ function AppProvider({ children }) {
     const [serviceConfigs, setServiceConfigs] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
     const [inventoryItems, setInventoryItems] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
     const [expenses, setExpenses] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [productTypes, setProductTypes] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
     const [isLoading, setIsLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(true);
     const [isInitialized, setIsInitialized] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
     const { toast } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$hooks$2f$use$2d$toast$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useToast"])();
@@ -1000,6 +1023,7 @@ function AppProvider({ children }) {
             setServiceConfigs([]);
             setInventoryItems([]);
             setExpenses([]);
+            setProductTypes([]);
         } catch (error) {
             console.error(error);
         } finally{
@@ -1108,7 +1132,8 @@ function AppProvider({ children }) {
             const serviceToSave = {
                 ...serviceData,
                 staffId: Number(serviceData.staffId),
-                timestamp: now
+                timestamp: now,
+                userId: user.id
             };
             const { data, error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('services').insert(serviceToSave).select();
             if (error) throw error;
@@ -1143,7 +1168,7 @@ function AppProvider({ children }) {
     };
     const loadInventoryItems = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])(async (currentUserId)=>{
         try {
-            const { data, error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('inventory_items').select('*').eq('userId', currentUserId).order('name');
+            const { data, error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('inventory_items').select('*, productType:product_types(*)').eq('userId', currentUserId).order('id');
             if (error) throw error;
             const formattedItems = data.map((i)=>({
                     ...i,
@@ -1170,13 +1195,13 @@ function AppProvider({ children }) {
             };
             await loadInventoryItems(user.id);
             toast({
-                title: t('inventory-item-added-success')
+                title: 'Inventory item added successfully'
             });
             return newItem;
         } catch (error) {
             console.error('Error adding inventory item:', error);
             toast({
-                title: t('inventory-item-added-failed'),
+                title: 'Failed to add inventory item',
                 variant: 'destructive'
             });
         } finally{
@@ -1191,12 +1216,12 @@ function AppProvider({ children }) {
             if (error) throw error;
             await loadInventoryItems(user.id);
             toast({
-                title: t('inventory-item-updated-success')
+                title: 'Inventory item updated successfully'
             });
         } catch (error) {
             console.error('Error updating inventory item:', error);
             toast({
-                title: t('inventory-item-updated-failed'),
+                title: 'Failed to update inventory item',
                 variant: 'destructive'
             });
         } finally{
@@ -1211,12 +1236,12 @@ function AppProvider({ children }) {
             if (error) throw error;
             await loadInventoryItems(user.id);
             toast({
-                title: t('inventory-item-removed-success')
+                title: 'Inventory item removed successfully'
             });
         } catch (error) {
             console.error('Error removing inventory item:', error);
             toast({
-                title: t('inventory-item-removed-failed'),
+                title: 'Failed to remove inventory item',
                 variant: 'destructive'
             });
         } finally{
@@ -1255,13 +1280,13 @@ function AppProvider({ children }) {
             };
             await loadExpenses(user.id);
             toast({
-                title: t('expense-added-success')
+                title: 'Expense added successfully'
             });
             return newExpense;
         } catch (error) {
             console.error('Error adding expense:', error);
             toast({
-                title: t('expense-added-failed'),
+                title: 'Failed to add expense',
                 variant: 'destructive'
             });
         } finally{
@@ -1276,12 +1301,93 @@ function AppProvider({ children }) {
             if (error) throw error;
             await loadExpenses(user.id);
             toast({
-                title: t('expense-removed-success')
+                title: 'Expense removed successfully'
             });
         } catch (error) {
             console.error('Error removing expense:', error);
             toast({
-                title: t('expense-removed-failed'),
+                title: 'Failed to remove expense',
+                variant: 'destructive'
+            });
+        } finally{
+            hideLoading();
+        }
+    };
+    const loadProductTypes = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])(async (currentUserId)=>{
+        try {
+            const { data, error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('product_types').select('*').eq('userId', currentUserId).order('name_en');
+            if (error) throw error;
+            const formattedTypes = data.map((t)=>({
+                    ...t,
+                    id: String(t.id)
+                }));
+            setProductTypes(formattedTypes);
+        } catch (error) {
+            console.error('Error loading product types:', error);
+            setProductTypes([]);
+        }
+    }, []);
+    const addProductType = async (nameEn, nameAr)=>{
+        if (!user) return;
+        showLoading();
+        try {
+            const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('product_types').insert({
+                name_en: nameEn,
+                name_ar: nameAr,
+                userId: user.id
+            });
+            if (error) throw error;
+            await loadProductTypes(user.id);
+            toast({
+                title: t('product-type-added-success')
+            });
+        } catch (error) {
+            console.error('Error adding product type:', error);
+            toast({
+                title: t('product-type-added-failed'),
+                variant: 'destructive'
+            });
+        } finally{
+            hideLoading();
+        }
+    };
+    const updateProductType = async (id, nameEn, nameAr)=>{
+        if (!user) return;
+        showLoading();
+        try {
+            const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('product_types').update({
+                name_en: nameEn,
+                name_ar: nameAr
+            }).eq('id', Number(id));
+            if (error) throw error;
+            await loadProductTypes(user.id);
+            toast({
+                title: t('product-type-updated-success')
+            });
+        } catch (error) {
+            console.error('Error updating product type:', error);
+            toast({
+                title: t('product-type-updated-failed'),
+                variant: 'destructive'
+            });
+        } finally{
+            hideLoading();
+        }
+    };
+    const removeProductType = async (id)=>{
+        if (!user) return;
+        showLoading();
+        try {
+            const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('product_types').delete().eq('id', Number(id));
+            if (error) throw error;
+            await loadProductTypes(user.id);
+            toast({
+                title: t('product-type-removed-success')
+            });
+        } catch (error) {
+            console.error('Error removing product type:', error);
+            toast({
+                title: t('product-type-removed-failed'),
                 variant: 'destructive'
             });
         } finally{
@@ -1295,7 +1401,8 @@ function AppProvider({ children }) {
             await Promise.all([
                 loadAllServices(),
                 loadInventoryItems(user.id),
-                loadExpenses(user.id)
+                loadExpenses(user.id),
+                loadProductTypes(user.id)
             ]);
         } catch (e) {
             console.error("Failed to load all data", e);
@@ -1311,6 +1418,7 @@ function AppProvider({ children }) {
         loadAllServices,
         loadInventoryItems,
         loadExpenses,
+        loadProductTypes,
         toast
     ]);
     const loadInitialData = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])(async (currentUser)=>{
@@ -1320,7 +1428,8 @@ function AppProvider({ children }) {
                 loadStaff(currentUser.id),
                 loadServiceConfigs(currentUser.id),
                 loadInventoryItems(currentUser.id),
-                loadExpenses(currentUser.id)
+                loadExpenses(currentUser.id),
+                loadProductTypes(currentUser.id)
             ]);
             const today = new Date();
             const startOfDay = new Date(today.setHours(0, 0, 0, 0)).toISOString();
@@ -1349,6 +1458,7 @@ function AppProvider({ children }) {
         loadServiceConfigs,
         loadInventoryItems,
         loadExpenses,
+        loadProductTypes,
         toast
     ]);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
@@ -1365,6 +1475,7 @@ function AppProvider({ children }) {
                 setServiceConfigs([]);
                 setInventoryItems([]);
                 setExpenses([]);
+                setProductTypes([]);
             }
             setIsInitialized(true);
             setIsLoading(false);
@@ -1407,6 +1518,10 @@ function AppProvider({ children }) {
         addExpense,
         removeExpense,
         loadExpenses,
+        productTypes,
+        addProductType,
+        updateProductType,
+        removeProductType,
         loadAllData
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(AppContext.Provider, {
@@ -1414,7 +1529,7 @@ function AppProvider({ children }) {
         children: children
     }, void 0, false, {
         fileName: "[project]/src/contexts/app-context.tsx",
-        lineNumber: 580,
+        lineNumber: 662,
         columnNumber: 10
     }, this);
 }
@@ -3704,13 +3819,7 @@ function AppContent({ children }) {
             columnNumber: 12
         }, this);
     }
-    const { isInitialized, isLoading, isAuthenticated, language, setLanguage } = context;
-    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
-        // Set the language to Arabic by default
-        setLanguage('ar');
-    }, [
-        setLanguage
-    ]);
+    const { isInitialized, isLoading, isAuthenticated, language } = context;
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         document.documentElement.lang = language;
         document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
@@ -3720,7 +3829,7 @@ function AppContent({ children }) {
     if (!isInitialized || isLoading) {
         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$loading$2d$overlay$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["LoadingOverlay"], {}, void 0, false, {
             fileName: "[project]/src/app/layout.tsx",
-            lineNumber: 36,
+            lineNumber: 31,
             columnNumber: 12
         }, this);
     }
@@ -3730,7 +3839,7 @@ function AppContent({ children }) {
                 onSwitchView: ()=>setAuthView('signup')
             }, void 0, false, {
                 fileName: "[project]/src/app/layout.tsx",
-                lineNumber: 41,
+                lineNumber: 36,
                 columnNumber: 14
             }, this);
         }
@@ -3738,7 +3847,7 @@ function AppContent({ children }) {
             onSwitchView: ()=>setAuthView('login')
         }, void 0, false, {
             fileName: "[project]/src/app/layout.tsx",
-            lineNumber: 43,
+            lineNumber: 38,
             columnNumber: 12
         }, this);
     };
@@ -3755,7 +3864,7 @@ function AppContent({ children }) {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$header$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Header"], {}, void 0, false, {
                 fileName: "[project]/src/app/layout.tsx",
-                lineNumber: 55,
+                lineNumber: 50,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -3763,20 +3872,18 @@ function AppContent({ children }) {
                 children: children
             }, void 0, false, {
                 fileName: "[project]/src/app/layout.tsx",
-                lineNumber: 56,
+                lineNumber: 51,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/layout.tsx",
-        lineNumber: 54,
+        lineNumber: 49,
         columnNumber: 5
     }, this);
 }
 function RootLayout({ children }) {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("html", {
-        lang: "ar",
-        dir: "rtl",
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("head", {
                 children: [
@@ -3785,7 +3892,7 @@ function RootLayout({ children }) {
                         href: "https://fonts.googleapis.com"
                     }, void 0, false, {
                         fileName: "[project]/src/app/layout.tsx",
-                        lineNumber: 71,
+                        lineNumber: 66,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("link", {
@@ -3794,7 +3901,7 @@ function RootLayout({ children }) {
                         crossOrigin: "anonymous"
                     }, void 0, false, {
                         fileName: "[project]/src/app/layout.tsx",
-                        lineNumber: 72,
+                        lineNumber: 67,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("link", {
@@ -3802,13 +3909,13 @@ function RootLayout({ children }) {
                         rel: "stylesheet"
                     }, void 0, false, {
                         fileName: "[project]/src/app/layout.tsx",
-                        lineNumber: 73,
+                        lineNumber: 68,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/layout.tsx",
-                lineNumber: 70,
+                lineNumber: 65,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("body", {
@@ -3819,29 +3926,29 @@ function RootLayout({ children }) {
                             children: children
                         }, void 0, false, {
                             fileName: "[project]/src/app/layout.tsx",
-                            lineNumber: 80,
+                            lineNumber: 75,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$toaster$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Toaster"], {}, void 0, false, {
                             fileName: "[project]/src/app/layout.tsx",
-                            lineNumber: 81,
+                            lineNumber: 76,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/layout.tsx",
-                    lineNumber: 79,
+                    lineNumber: 74,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/layout.tsx",
-                lineNumber: 78,
+                lineNumber: 73,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/layout.tsx",
-        lineNumber: 69,
+        lineNumber: 64,
         columnNumber: 5
     }, this);
 }

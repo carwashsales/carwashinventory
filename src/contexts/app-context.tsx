@@ -1,9 +1,10 @@
+
 'use client';
 
 import type { ReactNode } from 'react';
 import { createContext, useState, useEffect, useCallback } from 'react';
 import { translations, type Language } from '@/lib/translations';
-import type { Service, Staff, ServiceConfig, InventoryItem, Expense } from '@/types';
+import type { Service, Staff, ServiceConfig, InventoryItem, Expense, ProductType } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabaseClient';
 import { isSameDay } from 'date-fns';
@@ -34,13 +35,17 @@ export interface AppContextType {
   updateServiceConfig: (config: ServiceConfig) => Promise<void>;
   removeServiceConfig: (id: string) => Promise<void>;
   inventoryItems: InventoryItem[];
-  addInventoryItem: (item: Omit<InventoryItem, 'id' | 'userId'>) => Promise<InventoryItem | undefined>;
-  updateInventoryItem: (id: string, item: Omit<InventoryItem, 'id' | 'userId'>) => Promise<void>;
+  addInventoryItem: (item: Omit<InventoryItem, 'id' | 'userId' | 'productType'>) => Promise<InventoryItem | undefined>;
+  updateInventoryItem: (id: string, item: Omit<InventoryItem, 'id' | 'userId' | 'productType'>) => Promise<void>;
   removeInventoryItem: (id: string) => Promise<void>;
   expenses: Expense[];
   addExpense: (expense: Omit<Expense, 'id' | 'userId' | 'date'>) => Promise<Expense | undefined>;
   removeExpense: (id: string) => Promise<void>;
   loadExpenses: (currentUserId: string) => Promise<void>;
+  productTypes: ProductType[];
+  addProductType: (nameEn: string, nameAr: string) => Promise<void>;
+  updateProductType: (id: string, nameEn: string, nameAr: string) => Promise<void>;
+  removeProductType: (id: string) => Promise<void>;
   loadAllData: () => Promise<void>;
 }
 
@@ -55,6 +60,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [serviceConfigs, setServiceConfigs] = useState<ServiceConfig[]>([]);
   const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [productTypes, setProductTypes] = useState<ProductType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isInitialized, setIsInitialized] = useState(false);
   const { toast } = useToast();
@@ -225,6 +231,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setServiceConfigs([]);
       setInventoryItems([]);
       setExpenses([]);
+      setProductTypes([]);
     } catch (error) {
       console.error(error);
     } finally {
@@ -325,6 +332,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         ...serviceData,
         staffId: Number(serviceData.staffId),
         timestamp: now,
+        userId: user.id,
       };
 
       const { data, error } = await supabase.from('services').insert(serviceToSave).select();
@@ -353,11 +361,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
     try {
       const { data, error } = await supabase
         .from('inventory_items')
-        .select('*')
+        .select('*, productType:product_types(*)')
         .eq('userId', currentUserId)
-        .order('name');
+        .order('id');
       if (error) throw error;
-      const formattedItems = data.map(i => ({ ...i, id: String(i.id) }));
+      const formattedItems = data.map(i => ({ 
+        ...i, 
+        id: String(i.id),
+      }));
       setInventoryItems(formattedItems);
     } catch (error) {
       console.error('Error loading inventory items:', error);
@@ -365,7 +376,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const addInventoryItem = async (item: Omit<InventoryItem, 'id' | 'userId'>) => {
+  const addInventoryItem = async (item: Omit<InventoryItem, 'id' | 'userId' | 'productType'>) => {
     if (!user) return;
     showLoading();
     try {
@@ -373,27 +384,27 @@ export function AppProvider({ children }: { children: ReactNode }) {
       if (error) throw error;
       const newItem = { ...data[0], id: String(data[0].id) };
       await loadInventoryItems(user.id);
-      toast({ title: t('inventory-item-added-success') });
+      toast({ title: 'Inventory item added successfully' });
       return newItem;
     } catch (error) {
       console.error('Error adding inventory item:', error);
-      toast({ title: t('inventory-item-added-failed'), variant: 'destructive' });
+      toast({ title: 'Failed to add inventory item', variant: 'destructive' });
     } finally {
       hideLoading();
     }
   };
 
-  const updateInventoryItem = async (id: string, item: Omit<InventoryItem, 'id' | 'userId'>) => {
+  const updateInventoryItem = async (id: string, item: Omit<InventoryItem, 'id' | 'userId' | 'productType'>) => {
     if (!user) return;
     showLoading();
     try {
       const { error } = await supabase.from('inventory_items').update(item).eq('id', Number(id));
       if (error) throw error;
       await loadInventoryItems(user.id);
-      toast({ title: t('inventory-item-updated-success') });
+      toast({ title: 'Inventory item updated successfully' });
     } catch (error) {
       console.error('Error updating inventory item:', error);
-      toast({ title: t('inventory-item-updated-failed'), variant: 'destructive' });
+      toast({ title: 'Failed to update inventory item', variant: 'destructive' });
     } finally {
       hideLoading();
     }
@@ -406,10 +417,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.from('inventory_items').delete().eq('id', Number(id));
       if (error) throw error;
       await loadInventoryItems(user.id);
-      toast({ title: t('inventory-item-removed-success') });
+      toast({ title: 'Inventory item removed successfully' });
     } catch (error) {
       console.error('Error removing inventory item:', error);
-      toast({ title: t('inventory-item-removed-failed'), variant: 'destructive' });
+      toast({ title: 'Failed to remove inventory item', variant: 'destructive' });
     } finally {
       hideLoading();
     }
@@ -439,11 +450,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
       if (error) throw error;
       const newExpense = { ...data[0], id: String(data[0].id) };
       await loadExpenses(user.id);
-      toast({ title: t('expense-added-success') });
+      toast({ title: 'Expense added successfully' });
       return newExpense;
     } catch (error) {
       console.error('Error adding expense:', error);
-      toast({ title: t('expense-added-failed'), variant: 'destructive' });
+      toast({ title: 'Failed to add expense', variant: 'destructive' });
     } finally {
       hideLoading();
     }
@@ -456,10 +467,74 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.from('expenses').delete().eq('id', Number(id));
       if (error) throw error;
       await loadExpenses(user.id);
-      toast({ title: t('expense-removed-success') });
+      toast({ title: 'Expense removed successfully' });
     } catch (error) {
       console.error('Error removing expense:', error);
-      toast({ title: t('expense-removed-failed'), variant: 'destructive' });
+      toast({ title: 'Failed to remove expense', variant: 'destructive' });
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const loadProductTypes = useCallback(async (currentUserId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('product_types')
+        .select('*')
+        .eq('user_id', currentUserId)
+        .order('name_en');
+      if (error) throw error;
+      const formattedTypes = data.map(t => ({ ...t, id: String(t.id) }));
+      setProductTypes(formattedTypes);
+    } catch (error) {
+      console.error('Error loading product types:', error);
+      setProductTypes([]);
+    }
+  }, []);
+
+  const addProductType = async (nameEn: string, nameAr: string) => {
+    if (!user) return;
+    showLoading();
+    try {
+      const { error } = await supabase.from('product_types').insert({ name_en: nameEn, name_ar: nameAr, user_id: user.id });
+      if (error) throw error;
+      await loadProductTypes(user.id);
+      toast({ title: t('product-type-added-success') });
+    } catch (error) {
+      console.error('Error adding product type:', error);
+      toast({ title: t('product-type-added-failed'), variant: 'destructive' });
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const updateProductType = async (id: string, nameEn: string, nameAr: string) => {
+    if (!user) return;
+    showLoading();
+    try {
+      const { error } = await supabase.from('product_types').update({ name_en: nameEn, name_ar: nameAr }).eq('id', Number(id));
+      if (error) throw error;
+      await loadProductTypes(user.id);
+      toast({ title: t('product-type-updated-success') });
+    } catch (error) {
+      console.error('Error updating product type:', error);
+      toast({ title: t('product-type-updated-failed'), variant: 'destructive' });
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const removeProductType = async (id: string) => {
+    if (!user) return;
+    showLoading();
+    try {
+      const { error } = await supabase.from('product_types').delete().eq('id', Number(id));
+      if (error) throw error;
+      await loadProductTypes(user.id);
+      toast({ title: t('product-type-removed-success') });
+    } catch (error) {
+      console.error('Error removing product type:', error);
+      toast({ title: t('product-type-removed-failed'), variant: 'destructive' });
     } finally {
       hideLoading();
     }
@@ -473,6 +548,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         loadAllServices(),
         loadInventoryItems(user.id),
         loadExpenses(user.id),
+        loadProductTypes(user.id),
       ]);
     } catch (e) {
         console.error("Failed to load all data", e);
@@ -480,7 +556,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     } finally {
         hideLoading();
     }
-  }, [user, loadAllServices, loadInventoryItems, loadExpenses, toast]);
+  }, [user, loadAllServices, loadInventoryItems, loadExpenses, loadProductTypes, toast]);
 
   const loadInitialData = useCallback(async (currentUser: User) => {
     showLoading();
@@ -490,6 +566,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
             loadServiceConfigs(currentUser.id),
             loadInventoryItems(currentUser.id),
             loadExpenses(currentUser.id),
+            loadProductTypes(currentUser.id),
         ]);
         const today = new Date();
         const startOfDay = new Date(today.setHours(0, 0, 0, 0)).toISOString();
@@ -513,7 +590,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     } finally {
         hideLoading();
     }
-  }, [loadStaff, loadServiceConfigs, loadInventoryItems, loadExpenses, toast]);
+  }, [loadStaff, loadServiceConfigs, loadInventoryItems, loadExpenses, loadProductTypes, toast]);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
@@ -530,6 +607,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setServiceConfigs([]);
         setInventoryItems([]);
         setExpenses([]);
+        setProductTypes([]);
       }
       setIsInitialized(true);
       setIsLoading(false);
@@ -574,7 +652,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     addExpense,
     removeExpense,
     loadExpenses,
-    loadAllData,
+    productTypes,
+    addProductType,
+    updateProductType,
+    removeProductType,
+_id,    loadAllData,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

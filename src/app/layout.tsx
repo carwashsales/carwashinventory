@@ -20,12 +20,7 @@ function AppContent({ children }: { children: React.ReactNode }) {
     return <LoadingOverlay />;
   }
 
-  const { isInitialized, isLoading, isAuthenticated, language, setLanguage } = context;
-
-  useEffect(() => {
-    // Set the language to Arabic by default
-    setLanguage('ar');
-  }, [setLanguage]);
+  const { isInitialized, isLoading, isAuthenticated, language } = context;
 
   useEffect(() => {
     document.documentElement.lang = language;
@@ -66,7 +61,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ar" dir="rtl">
+    <html>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

@@ -204,7 +204,18 @@ export const translations = {
     "new-service": "خدمة جديدة",
     "purchase-date-placeholder": "تاريخ الشراء",
     "lifespan-days-placeholder": "مدة الصلاحية (أيام)",
-    "remaining-lifespan-label": "الصلاحية المتبقية"
+    "remaining-lifespan-label": "الصلاحية المتبقية",
+    "product-management-title": "إدارة المنتجات",
+    "add-product-type-title": "إضافة نوع منتج جديد",
+    "product-name-ar-label": "اسم المنتج (بالعربية)",
+    "product-name-en-label": "اسم المنتج (بالإنجليزية)",
+    "add-product-type-btn": "إضافة نوع المنتج",
+    "product-types-list-title": "قائمة أنواع المنتجات",
+    "product-type-added-success": "تمت إضافة نوع المنتج بنجاح.",
+    "product-type-added-failed": "فشل في إضافة نوع المنتج.",
+    "product-type-removed-success": "تمت إزالة نوع المنتج بنجاح.",
+    "product-type-removed-failed": "فشل في إزالة نوع المنتج.",
+    "select-product-type": "اختر المنتج"
   },
   en: {
     "app-title": "Car Wash Service",
@@ -410,7 +421,18 @@ export const translations = {
     "new-service": "New Service",
     "purchase-date-placeholder": "Purchase Date",
     "lifespan-days-placeholder": "Lifespan (Days)",
-    "remaining-lifespan-label": "Remaining Lifespan"
+    "remaining-lifespan-label": "Remaining Lifespan",
+    "product-management-title": "Product Management",
+    "add-product-type-title": "Add New Product Type",
+    "product-name-ar-label": "Product Name (Arabic)",
+    "product-name-en-label": "Product Name (English)",
+    "add-product-type-btn": "Add Product Type",
+    "product-types-list-title": "Product Types List",
+    "product-type-added-success": "Product type added successfully.",
+    "product-type-added-failed": "Failed to add product type.",
+    "product-type-removed-success": "Product type removed successfully.",
+    "product-type-removed-failed": "Failed to remove product type.",
+    "select-product-type": "Select Product"
   }
 }
 
