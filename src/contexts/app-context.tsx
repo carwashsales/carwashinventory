@@ -300,12 +300,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
       const formattedServices = data.map(s => ({ ...s, id: String(s.id), staffId: String(s.staffId) }));
       setAllServices(formattedServices as Service[]);
-      
-      const todayServices = (formattedServices as Service[])
-        .filter(service => isSameDay(new Date(service.timestamp), new Date()))
-        .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-      setServices(todayServices);
-
     } catch (error) {
       console.error('Error loading all services: ', error);
       toast({ title: 'Failed to load services data.', variant: 'destructive' });
@@ -564,9 +558,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
         await Promise.all([
             loadStaff(currentUser.id),
             loadServiceConfigs(currentUser.id),
-            loadInventoryItems(currentUser.id),
-            loadExpenses(currentUser.id),
-            loadProductTypes(currentUser.id),
         ]);
         const today = new Date();
         const startOfDay = new Date(today.setHours(0, 0, 0, 0)).toISOString();
@@ -590,7 +581,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     } finally {
         hideLoading();
     }
-  }, [loadStaff, loadServiceConfigs, loadInventoryItems, loadExpenses, loadProductTypes, toast]);
+  }, [loadStaff, loadServiceConfigs, toast]);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
@@ -656,7 +647,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     addProductType,
     updateProductType,
     removeProductType,
-_id,    loadAllData,
+    loadAllData,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

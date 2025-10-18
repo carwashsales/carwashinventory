@@ -1110,12 +1110,6 @@ function AppProvider(param) {
                         })
                 }["AppProvider.useCallback[loadAllServices].formattedServices"]);
                 setAllServices(formattedServices);
-                const todayServices = formattedServices.filter({
-                    "AppProvider.useCallback[loadAllServices].todayServices": (service)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$isSameDay$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["isSameDay"])(new Date(service.timestamp), new Date())
-                }["AppProvider.useCallback[loadAllServices].todayServices"]).sort({
-                    "AppProvider.useCallback[loadAllServices].todayServices": (a, b)=>new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-                }["AppProvider.useCallback[loadAllServices].todayServices"]);
-                setServices(todayServices);
             } catch (error) {
                 console.error('Error loading all services: ', error);
                 toast({
@@ -1343,7 +1337,7 @@ function AppProvider(param) {
     const loadProductTypes = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
         "AppProvider.useCallback[loadProductTypes]": async (currentUserId)=>{
             try {
-                const { data, error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].from('product_types').select('*').eq('userId', currentUserId).order('name_en');
+                const { data, error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].from('product_types').select('*').eq('user_id', currentUserId).order('name_en');
                 if (error) throw error;
                 const formattedTypes = data.map({
                     "AppProvider.useCallback[loadProductTypes].formattedTypes": (t)=>({
@@ -1365,7 +1359,7 @@ function AppProvider(param) {
             const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].from('product_types').insert({
                 name_en: nameEn,
                 name_ar: nameAr,
-                userId: user.id
+                user_id: user.id
             });
             if (error) throw error;
             await loadProductTypes(user.id);
@@ -1460,10 +1454,7 @@ function AppProvider(param) {
             try {
                 await Promise.all([
                     loadStaff(currentUser.id),
-                    loadServiceConfigs(currentUser.id),
-                    loadInventoryItems(currentUser.id),
-                    loadExpenses(currentUser.id),
-                    loadProductTypes(currentUser.id)
+                    loadServiceConfigs(currentUser.id)
                 ]);
                 const today = new Date();
                 const startOfDay = new Date(today.setHours(0, 0, 0, 0)).toISOString();
@@ -1493,9 +1484,6 @@ function AppProvider(param) {
     }["AppProvider.useCallback[loadInitialData]"], [
         loadStaff,
         loadServiceConfigs,
-        loadInventoryItems,
-        loadExpenses,
-        loadProductTypes,
         toast
     ]);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
@@ -1574,7 +1562,7 @@ function AppProvider(param) {
         children: children
     }, void 0, false, {
         fileName: "[project]/src/contexts/app-context.tsx",
-        lineNumber: 662,
+        lineNumber: 653,
         columnNumber: 10
     }, this);
 }
@@ -4326,6 +4314,7 @@ function RootLayout(param) {
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("body", {
                 className: "font-body antialiased",
+                suppressHydrationWarning: true,
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$contexts$2f$app$2d$context$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AppProvider"], {
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(AppContent, {

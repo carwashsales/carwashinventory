@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Settings } from '@/components/settings/settings';
+import { SettingsDialog as Settings } from '@/components/settings-dialog';
 import { AppShell } from '@/components/app-shell';
 
 export default function SettingsPage() {

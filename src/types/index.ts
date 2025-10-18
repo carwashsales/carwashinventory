@@ -51,7 +51,7 @@ export type ProductType = {
   id: string;
   name_en: string;
   name_ar: string;
-  userId: string;
+  user_id: string;
 };
 
 export type InventoryItem = {

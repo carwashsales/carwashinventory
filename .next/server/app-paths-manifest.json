@@ -1,5 +1,7 @@
 {
+  "/dashboard/page": "app/dashboard/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
   "/inventory/page": "app/inventory/page.js",
+  "/new-service/page": "app/new-service/page.js",
   "/page": "app/page.js"
 }

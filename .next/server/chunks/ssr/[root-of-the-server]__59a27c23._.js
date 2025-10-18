@@ -1102,8 +1102,6 @@ function AppProvider({ children }) {
                     staffId: String(s.staffId)
                 }));
             setAllServices(formattedServices);
-            const todayServices = formattedServices.filter((service)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$isSameDay$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["isSameDay"])(new Date(service.timestamp), new Date())).sort((a, b)=>new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-            setServices(todayServices);
         } catch (error) {
             console.error('Error loading all services: ', error);
             toast({
@@ -1315,7 +1313,7 @@ function AppProvider({ children }) {
     };
     const loadProductTypes = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])(async (currentUserId)=>{
         try {
-            const { data, error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('product_types').select('*').eq('userId', currentUserId).order('name_en');
+            const { data, error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('product_types').select('*').eq('user_id', currentUserId).order('name_en');
             if (error) throw error;
             const formattedTypes = data.map((t)=>({
                     ...t,
@@ -1334,7 +1332,7 @@ function AppProvider({ children }) {
             const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('product_types').insert({
                 name_en: nameEn,
                 name_ar: nameAr,
-                userId: user.id
+                user_id: user.id
             });
             if (error) throw error;
             await loadProductTypes(user.id);
@@ -1426,10 +1424,7 @@ function AppProvider({ children }) {
         try {
             await Promise.all([
                 loadStaff(currentUser.id),
-                loadServiceConfigs(currentUser.id),
-                loadInventoryItems(currentUser.id),
-                loadExpenses(currentUser.id),
-                loadProductTypes(currentUser.id)
+                loadServiceConfigs(currentUser.id)
             ]);
             const today = new Date();
             const startOfDay = new Date(today.setHours(0, 0, 0, 0)).toISOString();
@@ -1456,9 +1451,6 @@ function AppProvider({ children }) {
     }, [
         loadStaff,
         loadServiceConfigs,
-        loadInventoryItems,
-        loadExpenses,
-        loadProductTypes,
         toast
     ]);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
@@ -1529,7 +1521,7 @@ function AppProvider({ children }) {
         children: children
     }, void 0, false, {
         fileName: "[project]/src/contexts/app-context.tsx",
-        lineNumber: 662,
+        lineNumber: 653,
         columnNumber: 10
     }, this);
 }
@@ -3920,6 +3912,7 @@ function RootLayout({ children }) {
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("body", {
                 className: "font-body antialiased",
+                suppressHydrationWarning: true,
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$contexts$2f$app$2d$context$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AppProvider"], {
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(AppContent, {
