@@ -1,71 +1,56 @@
 'use client';
 
-import { useContext } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { AppContext, AppContextType } from '@/contexts/app-context';
+import { Car, LayoutDashboard, ShoppingCart, DollarSign, Tag, FileText, Settings, LifeBuoy, X } from 'lucide-react';
+import { useApp } from '@/hooks/use-app';
 import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
-import { Car, LayoutDashboard, ShoppingCart, DollarSign, Tag, FileText, Settings, HelpCircle } from 'lucide-react';
 
-interface SidebarProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+const navLinks = [
+  { href: '/dashboard', icon: LayoutDashboard, label: 'dashboard' },
+  { href: '/inventory', icon: ShoppingCart, label: 'inventory-management-title' },
+  { href: '/sales', icon: DollarSign, label: 'new-service-tab-text' },
+  { href: '/pricing', icon: Tag, label: 'manage-services-tab-text' },
+  { href: '/expenses', icon: FileText, label: 'expense-management-title' },
+  { href: '/reports', icon: FileText, label: 'reports-tab-text' },
+];
 
-export function Sidebar({ isOpen, onClose }: SidebarProps) {
-  const { t } = useContext(AppContext) as AppContextType;
+export function Sidebar({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
+  const { t } = useApp();
   const pathname = usePathname();
 
-  const navItems = [
-    { href: '/dashboard', label: t('dashboard-title'), icon: <LayoutDashboard /> },
-    { href: '/inventory', label: t('inventory-title'), icon: <ShoppingCart /> },
-    { href: '/new-service', label: t('orders-title'), icon: <DollarSign /> },
-    { href: '/sales', label: t('sales-title'), icon: <Tag /> },
-    { href: '/pricing', label: t('pricing-title'), icon: <FileText /> },
-    { href: '/reports', label: t('reports-title'), icon: <FileText /> },
-  ];
-
-  const bottomNavItems = [
-    { href: '/settings', label: t('settings-title'), icon: <Settings /> },
-    { href: '/support', label: t('support-title'), icon: <HelpCircle /> },
-  ];
-
   return (
-    <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-gray-900 text-white transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out`}>
+    <aside className={`fixed inset-y-0 left-0 z-30 w-64 bg-gray-900 text-white transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out md:relative md:translate-x-0`}>
       <div className="flex items-center justify-between p-4 border-b border-gray-800">
-        <Link href="/home" className="flex items-center gap-2">
-          <Car className="h-8 w-8 text-blue-400" />
-          <h1 className="text-xl font-bold">CleanSweep</h1>
+        <Link href="/dashboard" className="flex items-center gap-2 text-xl font-bold">
+          <Car size={32} />
+          <span>CleanSweep</span>
         </Link>
         <Button variant="ghost" size="icon" onClick={onClose} className="md:hidden">
-          <X className="h-6 w-6" />
+          <X />
         </Button>
       </div>
-      <nav className="flex flex-col justify-between h-full p-4">
-        <div>
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium ${pathname === item.href ? 'bg-gray-800' : 'hover:bg-gray-800'}`}>
-              {item.icon}
-              <span>{item.label}</span>
-            </Link>
-          ))}
-        </div>
-        <div>
-          {bottomNavItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium ${pathname === item.href ? 'bg-gray-800' : 'hover:bg-gray-800'}`}>
-              {item.icon}
-              <span>{item.label}</span>
-            </Link>
-          ))}
-        </div>
+      <nav className="flex-1 space-y-2 p-4">
+        {navLinks.map(link => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:bg-gray-800 ${pathname === link.href ? 'bg-gray-800' : ''}`}>
+            <link.icon className="h-5 w-5" />
+            {t(link.label as any)}
+          </Link>
+        ))}
       </nav>
-    </div>
+      <div className="mt-auto p-4 border-t border-gray-800 space-y-2">
+        <Link href="/settings" className="flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:bg-gray-800">
+          <Settings className="h-5 w-5" />
+          {t('settings-title')}
+        </Link>
+        <Link href="/support" className="flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:bg-gray-800">
+          <LifeBuoy className="h-5 w-5" />
+          {t('support-tab-text')}
+        </Link>
+      </div>
+    </aside>
   );
 }

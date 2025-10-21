@@ -217,7 +217,13 @@ export const translations = {
     "product-type-removed-success": "تمت إزالة نوع المنتج بنجاح.",
     "product-type-removed-failed": "فشل في إزالة نوع المنتج.",
     "select-product-type": "اختر المنتج",
-    "documents-title": "المستندات"
+    "documents-title": "المستندات",
+    "reports-title": "التقارير",
+    "generate-report-btn": "إنشاء تقرير",
+    "available-reports-title": "التقارير المتاحة",
+    "commission-report-link": "تقرير العمولات",
+    "services-report-link": "تقرير الخدمات",
+    "expenses-report-link": "تقرير المصروفات"
   },
   en: {
     "app-title": "Car Wash Service",
@@ -352,7 +358,7 @@ export const translations = {
     "whatsapp-bulk-message": "Hello! We have new and exciting offers at our car wash. We look forward to your visit soon!",
     "service-management-title": "Service Management",
     "manage-services-btn": "Manage Service Types",
-    "manage-services-tab-text": "Manage Services",
+    "manage-services-tab-text": "Pricing",
     "service-types-page-title": "Manage Service Types",
     "service-types-page-description": "Add, edit, or delete service types and their pricing.",
     "add-new-service-type-btn": "Add New Service Type",
@@ -392,7 +398,7 @@ export const translations = {
     "cancel-btn": "Cancel",
     "delete-btn": "Delete",
     "daily-report-tab-title": "Daily Report",
-    "expense-management-title": "Expense Management",
+    "expense-management-title": "Expenses",
     "add-expense-title": "Add New Expense",
     "expense-description-placeholder": "Expense Description",
     "expense-amount-placeholder": "Amount",
@@ -401,7 +407,7 @@ export const translations = {
     "table-header-description": "Description",
     "table-header-amount": "Amount",
     "no-expenses-text": "No expenses recorded yet.",
-    "inventory-management-title": "Inventory Management",
+    "inventory-management-title": "Inventory",
     "add-inventory-item-title": "Add New Inventory Item",
     "item-name-placeholder": "Item Name",
     "quantity-placeholder": "Quantity",
@@ -437,7 +443,13 @@ export const translations = {
     "product-type-removed-success": "Product type removed successfully.",
     "product-type-removed-failed": "Failed to remove product type.",
     "select-product-type": "Select Product",
-    "documents-title": "Documents"
+    "documents-title": "Documents",
+    "reports-title": "Reports",
+    "generate-report-btn": "Generate Report",
+    "available-reports-title": "Available Reports",
+    "commission-report-link": "Commission Report",
+    "services-report-link": "Services Report",
+    "expenses-report-link": "Expenses Report"
   }
 }
 

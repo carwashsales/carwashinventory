@@ -12,7 +12,6 @@ import { Label } from '@/components/ui/label';
 import { Calendar as CalendarIcon, Download, DollarSign, ArrowUp, ArrowDown } from 'lucide-react';
 import { format, subDays } from 'date-fns';
 import { arSA } from 'date-fns/locale';
-import { ManageServices } from '@/components/manage-services';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 export function Dashboard() {
@@ -264,10 +263,6 @@ export function Dashboard() {
           </Table>
         </CardContent>
       </Card>
-
-      <div className="col-span-4">
-        <ManageServices />
-      </div>
     </div>
   );
 }

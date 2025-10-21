@@ -2,10 +2,11 @@
 'use client';
 
 import './globals.css';
-import { AppProvider, AppContext } from '@/contexts/app-context';
+import { AppProvider, AppContext, AppContextType } from '@/contexts/app-context';
 import { Toaster } from '@/components/ui/toaster';
 import { useContext, useEffect, useState } from 'react';
 import { LoadingOverlay } from '@/components/loading-overlay';
+import { Sidebar } from '@/components/sidebar';
 import { Header } from '@/components/header';
 import { LoginForm } from '@/components/login-form';
 import { SignUpForm } from '@/components/signup-form';
@@ -14,13 +15,14 @@ import { usePathname } from 'next/navigation';
 function AppContent({ children }: { children: React.ReactNode }) {
   const context = useContext(AppContext);
   const [authView, setAuthView] = useState<'login' | 'signup'>('login');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const path = usePathname();
 
   if (!context) {
     return <LoadingOverlay />;
   }
 
-  const { isInitialized, isLoading, isAuthenticated, language } = context;
+  const { isInitialized, isLoading, isAuthenticated, language } = context as AppContextType;
 
   useEffect(() => {
     document.documentElement.lang = language;
@@ -46,11 +48,14 @@ function AppContent({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Header />
-      <main className="flex-1 container mx-auto py-6">
-        {children}
-      </main>
+    <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900">
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <div className="flex-1 flex flex-col">
+        <Header onMenuClick={() => setIsSidebarOpen(true)} />
+        <main className="flex-1 p-4 md:p-6">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }
