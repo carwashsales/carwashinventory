@@ -13,6 +13,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Settings } from 'lucide-react';
 import type { Service } from '@/types';
+import Image from 'next/image';
 
 type PaymentType = 'coupon' | 'cash' | 'machine' | 'not-paid';
 
@@ -270,12 +271,18 @@ export function NewServiceForm() {
             
             <div className="space-y-2">
               <Label htmlFor="price">{t('price-label')}</Label>
-               <Input id="price" value={paymentType === 'not-paid' ? 0 : price} readOnly disabled={noStaff} />
+               <div className="relative">
+                <Input id="price" value={paymentType === 'not-paid' ? 0 : price} readOnly disabled={noStaff} className="pl-10" />
+                <Image src="/sar.png" alt="SAR" width={15} height={15} className="absolute left-3 top-1/2 -translate-y-1/2" />
+              </div>
             </div>
             
             <div className="space-y-2">
               <Label htmlFor="commission">{t('commission-label')}</Label>
-              <Input id="commission" value={commission} readOnly disabled={noStaff} />
+              <div className="relative">
+                <Input id="commission" value={commission} readOnly disabled={noStaff} className="pl-10" />
+                <Image src="/sar.png" alt="SAR" width={15} height={15} className="absolute left-3 top-1/2 -translate-y-1/2" />
+              </div>
             </div>
             
         
@@ -287,7 +294,9 @@ export function NewServiceForm() {
                     onCheckedChange={(checked) => setWaxAddOn(Boolean(checked))} 
                     disabled={noStaff} 
                   />
-                  <Label htmlFor="wax-add-on" className="cursor-pointer">{t('wax-add-on')} (+{WAX_PRICE} {t('sar')})</Label>
+                  <Label htmlFor="wax-add-on" className="cursor-pointer flex items-center">
+                    {t('wax-add-on')} (+{WAX_PRICE} <Image src="/sar.png" alt="SAR" width={15} height={15} className="mx-1" />)
+                  </Label>
                 </div>
               )}
             

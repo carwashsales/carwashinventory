@@ -1,4 +1,3 @@
-
 export const translations = {
   ar: {
     "app-title": "خدمة غسيل السيارات",
@@ -213,9 +212,12 @@ export const translations = {
     "product-types-list-title": "قائمة أنواع المنتجات",
     "product-type-added-success": "تمت إضافة نوع المنتج بنجاح.",
     "product-type-added-failed": "فشل في إضافة نوع المنتج.",
+    "product-type-updated-success": "تم تحديث نوع المنتج بنجاح.",
+    "product-type-updated-failed": "فشل في تحديث نوع المنتج.",
     "product-type-removed-success": "تمت إزالة نوع المنتج بنجاح.",
     "product-type-removed-failed": "فشل في إزالة نوع المنتج.",
-    "select-product-type": "اختر المنتج"
+    "select-product-type": "اختر المنتج",
+    "documents-title": "المستندات"
   },
   en: {
     "app-title": "Car Wash Service",
@@ -430,9 +432,12 @@ export const translations = {
     "product-types-list-title": "Product Types List",
     "product-type-added-success": "Product type added successfully.",
     "product-type-added-failed": "Failed to add product type.",
+    "product-type-updated-success": "Product type updated successfully.",
+    "product-type-updated-failed": "Failed to update product type.",
     "product-type-removed-success": "Product type removed successfully.",
     "product-type-removed-failed": "Failed to remove product type.",
-    "select-product-type": "Select Product"
+    "select-product-type": "Select Product",
+    "documents-title": "Documents"
   }
 }
 

@@ -1,8 +1,9 @@
-'use client';
+    'use client';
 
 import { useContext } from 'react';
 import { AppContext, AppContextType } from '@/contexts/app-context';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import Image from 'next/image';
 
 interface DashboardSummaryProps {
   totalRevenue: number;
@@ -29,7 +30,9 @@ export function DashboardSummary({ totalRevenue, totalCommissions, totalExpenses
             <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{card.value}</div>
+            <div className="text-2xl font-bold flex items-center">
+              {card.value} <Image src="/sar.png" alt="SAR" width={20} height={20} className="ml-2" />
+            </div>
           </CardContent>
         </Card>
       ))}

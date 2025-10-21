@@ -156,7 +156,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     showLoading();
     try {
         const { id, ...configData } = config;
-        const { error } = await supabase.from('service_configs').update(configData).eq('id', Number(id));
+        const { error } = await supabase.from('service_configs').update(configData).eq('id', id);
         if (error) throw error;
         await loadServiceConfigs(user.id);
         toast({ title: t('service-type-updated-success')});
@@ -172,7 +172,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (!user) return;
     showLoading();
     try {
-        const { error } = await supabase.from('service_configs').delete().eq('id', Number(id));
+        const { error } = await supabase.from('service_configs').delete().eq('id', id);
         if (error) throw error;
         await loadServiceConfigs(user.id);
         toast({ title: t('service-type-removed-success')});
@@ -275,7 +275,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (!user) return;
     showLoading();
     try {
-      const { error } = await supabase.from('staff').delete().eq('id', Number(id));
+      const { error } = await supabase.from('staff').delete().eq('id', id);
       if (error) throw error;
       await loadStaff(user.id);
       toast({ title: t('staff-removed-success') });
@@ -324,7 +324,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       
       const serviceToSave = {
         ...serviceData,
-        staffId: Number(serviceData.staffId),
+        staffId: serviceData.staffId,
         timestamp: now,
         userId: user.id,
       };
@@ -392,7 +392,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (!user) return;
     showLoading();
     try {
-      const { error } = await supabase.from('inventory_items').update(item).eq('id', Number(id));
+      const { error } = await supabase.from('inventory_items').update(item).eq('id', id);
       if (error) throw error;
       await loadInventoryItems(user.id);
       toast({ title: 'Inventory item updated successfully' });
@@ -408,7 +408,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (!user) return;
     showLoading();
     try {
-      const { error } = await supabase.from('inventory_items').delete().eq('id', Number(id));
+      const { error } = await supabase.from('inventory_items').delete().eq('id', id);
       if (error) throw error;
       await loadInventoryItems(user.id);
       toast({ title: 'Inventory item removed successfully' });
@@ -458,7 +458,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (!user) return;
     showLoading();
     try {
-      const { error } = await supabase.from('expenses').delete().eq('id', Number(id));
+      const { error } = await supabase.from('expenses').delete().eq('id', id);
       if (error) throw error;
       await loadExpenses(user.id);
       toast({ title: 'Expense removed successfully' });
@@ -506,7 +506,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (!user) return;
     showLoading();
     try {
-      const { error } = await supabase.from('product_types').update({ name_en: nameEn, name_ar: nameAr }).eq('id', Number(id));
+      const { error } = await supabase.from('product_types').update({ name_en: nameEn, name_ar: nameAr }).eq('id', id);
       if (error) throw error;
       await loadProductTypes(user.id);
       toast({ title: t('product-type-updated-success') });
@@ -522,7 +522,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (!user) return;
     showLoading();
     try {
-      const { error } = await supabase.from('product_types').delete().eq('id', Number(id));
+      const { error } = await supabase.from('product_types').delete().eq('id', id);
       if (error) throw error;
       await loadProductTypes(user.id);
       toast({ title: t('product-type-removed-success') });
@@ -585,13 +585,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      setIsLoading(true);
+      
       const currentUser = session?.user ?? null;
       setUser(currentUser);
 
-      if (currentUser) {
-        await loadInitialData(currentUser);
-      } else {
+      if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN') {
+        setIsLoading(true);
+        if (currentUser) {
+          await loadInitialData(currentUser);
+        }
+        setIsInitialized(true);
+        setIsLoading(false);
+      } else if (event === 'SIGNED_OUT') {
         setStaff([]);
         setServices([]);
         setAllServices([]);
@@ -599,9 +604,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setInventoryItems([]);
         setExpenses([]);
         setProductTypes([]);
+        setIsInitialized(true);
       }
-      setIsInitialized(true);
-      setIsLoading(false);
     });
     
     if (typeof window !== 'undefined' && !document.documentElement.lang) {

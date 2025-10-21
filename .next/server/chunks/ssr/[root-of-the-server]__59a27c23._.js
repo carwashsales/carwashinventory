@@ -226,9 +226,12 @@ const translations = {
         "product-types-list-title": "قائمة أنواع المنتجات",
         "product-type-added-success": "تمت إضافة نوع المنتج بنجاح.",
         "product-type-added-failed": "فشل في إضافة نوع المنتج.",
+        "product-type-updated-success": "تم تحديث نوع المنتج بنجاح.",
+        "product-type-updated-failed": "فشل في تحديث نوع المنتج.",
         "product-type-removed-success": "تمت إزالة نوع المنتج بنجاح.",
         "product-type-removed-failed": "فشل في إزالة نوع المنتج.",
-        "select-product-type": "اختر المنتج"
+        "select-product-type": "اختر المنتج",
+        "documents-title": "المستندات"
     },
     en: {
         "app-title": "Car Wash Service",
@@ -443,9 +446,12 @@ const translations = {
         "product-types-list-title": "Product Types List",
         "product-type-added-success": "Product type added successfully.",
         "product-type-added-failed": "Failed to add product type.",
+        "product-type-updated-success": "Product type updated successfully.",
+        "product-type-updated-failed": "Failed to update product type.",
         "product-type-removed-success": "Product type removed successfully.",
         "product-type-removed-failed": "Failed to remove product type.",
-        "select-product-type": "Select Product"
+        "select-product-type": "Select Product",
+        "documents-title": "Documents"
     }
 };
 }),
@@ -936,7 +942,7 @@ function AppProvider({ children }) {
         showLoading();
         try {
             const { id, ...configData } = config;
-            const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('service_configs').update(configData).eq('id', Number(id));
+            const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('service_configs').update(configData).eq('id', id);
             if (error) throw error;
             await loadServiceConfigs(user.id);
             toast({
@@ -956,7 +962,7 @@ function AppProvider({ children }) {
         if (!user) return;
         showLoading();
         try {
-            const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('service_configs').delete().eq('id', Number(id));
+            const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('service_configs').delete().eq('id', id);
             if (error) throw error;
             await loadServiceConfigs(user.id);
             toast({
@@ -1072,7 +1078,7 @@ function AppProvider({ children }) {
         if (!user) return;
         showLoading();
         try {
-            const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('staff').delete().eq('id', Number(id));
+            const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('staff').delete().eq('id', id);
             if (error) throw error;
             await loadStaff(user.id);
             toast({
@@ -1129,7 +1135,7 @@ function AppProvider({ children }) {
             const now = new Date().toISOString();
             const serviceToSave = {
                 ...serviceData,
-                staffId: Number(serviceData.staffId),
+                staffId: serviceData.staffId,
                 timestamp: now,
                 userId: user.id
             };
@@ -1210,7 +1216,7 @@ function AppProvider({ children }) {
         if (!user) return;
         showLoading();
         try {
-            const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('inventory_items').update(item).eq('id', Number(id));
+            const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('inventory_items').update(item).eq('id', id);
             if (error) throw error;
             await loadInventoryItems(user.id);
             toast({
@@ -1230,7 +1236,7 @@ function AppProvider({ children }) {
         if (!user) return;
         showLoading();
         try {
-            const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('inventory_items').delete().eq('id', Number(id));
+            const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('inventory_items').delete().eq('id', id);
             if (error) throw error;
             await loadInventoryItems(user.id);
             toast({
@@ -1295,7 +1301,7 @@ function AppProvider({ children }) {
         if (!user) return;
         showLoading();
         try {
-            const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('expenses').delete().eq('id', Number(id));
+            const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('expenses').delete().eq('id', id);
             if (error) throw error;
             await loadExpenses(user.id);
             toast({
@@ -1356,7 +1362,7 @@ function AppProvider({ children }) {
             const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('product_types').update({
                 name_en: nameEn,
                 name_ar: nameAr
-            }).eq('id', Number(id));
+            }).eq('id', id);
             if (error) throw error;
             await loadProductTypes(user.id);
             toast({
@@ -1376,7 +1382,7 @@ function AppProvider({ children }) {
         if (!user) return;
         showLoading();
         try {
-            const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('product_types').delete().eq('id', Number(id));
+            const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('product_types').delete().eq('id', id);
             if (error) throw error;
             await loadProductTypes(user.id);
             toast({
@@ -1455,12 +1461,16 @@ function AppProvider({ children }) {
     ]);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         const { data: { subscription } } = __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].auth.onAuthStateChange(async (event, session)=>{
-            setIsLoading(true);
             const currentUser = session?.user ?? null;
             setUser(currentUser);
-            if (currentUser) {
-                await loadInitialData(currentUser);
-            } else {
+            if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN') {
+                setIsLoading(true);
+                if (currentUser) {
+                    await loadInitialData(currentUser);
+                }
+                setIsInitialized(true);
+                setIsLoading(false);
+            } else if (event === 'SIGNED_OUT') {
                 setStaff([]);
                 setServices([]);
                 setAllServices([]);
@@ -1468,9 +1478,8 @@ function AppProvider({ children }) {
                 setInventoryItems([]);
                 setExpenses([]);
                 setProductTypes([]);
+                setIsInitialized(true);
             }
-            setIsInitialized(true);
-            setIsLoading(false);
         });
         if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
         ;
@@ -1521,7 +1530,7 @@ function AppProvider({ children }) {
         children: children
     }, void 0, false, {
         fileName: "[project]/src/contexts/app-context.tsx",
-        lineNumber: 653,
+        lineNumber: 657,
         columnNumber: 10
     }, this);
 }

@@ -5,6 +5,7 @@ import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend } fro
 import { AppContext, AppContextType } from '@/contexts/app-context';
 import type { Service, Expense } from '@/types';
 import { format, eachDayOfInterval, startOfDay } from 'date-fns';
+import Image from 'next/image';
 
 interface RevenueChartProps {
   services: Service[];
@@ -47,8 +48,8 @@ export function RevenueChart({ services, expenses }: RevenueChartProps) {
     <ResponsiveContainer width="100%" height={350}>
       <BarChart data={data}>
         <XAxis dataKey="date" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-        <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
-        <Tooltip />
+        <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}`} />
+        <Tooltip formatter={(value: number) => [<>{value} <Image src="/sar.png" alt="SAR" width={15} height={15} /></>, null]} />
         <Legend />
         <Bar dataKey={t('revenue')} fill="#3498db" radius={[4, 4, 0, 0]} />
         <Bar dataKey={t('expenses')} fill="#e74c3c" radius={[4, 4, 0, 0]} />
