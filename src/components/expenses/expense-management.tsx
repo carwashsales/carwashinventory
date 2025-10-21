@@ -47,7 +47,7 @@ export function ExpenseManagement() {
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-2">{t('expenses-list-title')}</h3>
-            <div className="rounded-md border">
+            <div className="rounded-md border overflow-x-auto">
                 <Table>
                     <TableHeader>
                         <TableRow>

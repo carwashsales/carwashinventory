@@ -138,7 +138,7 @@ export function InventoryManagement() {
             
             <div>
               <h3 className="text-lg font-semibold mb-2">{t('inventory-list-title')}</h3>
-              <div className="rounded-md border">
+              <div className="rounded-md border overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -241,7 +241,7 @@ export function InventoryManagement() {
             </div>
             <div>
               <h3 className="text-lg font-semibold mb-2">{t('product-types-list-title')}</h3>
-              <div className="rounded-md border">
+              <div className="rounded-md border overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>

@@ -80,7 +80,7 @@ export default function SettingsPage() {
 
                   <div className="space-y-3 rounded-md border p-4">
                     <h4 className="font-medium">{t('add-staff-member-title')}</h4>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="new-staff-name-ar">{t('staff-name-ar-label')}</Label>
                         <Input 
@@ -101,8 +101,8 @@ export default function SettingsPage() {
                       </div>
                     </div>
                     <Button onClick={handleAddStaff} className="w-full">
-                      <PlusCircle />
-                      {t('add-staff-btn')}
+                      <PlusCircle className="mr-2 h-4 w-4" />
+                      <span>{t('add-staff-btn')}</span>
                     </Button>
                   </div>
                 </div>

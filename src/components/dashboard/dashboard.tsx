@@ -9,7 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from '@/components/ui/table';
 import { Label } from '@/components/ui/label';
-import { Calendar as CalendarIcon, Download, DollarSign, ArrowUp, ArrowDown } from 'lucide-react';
+import { Calendar as CalendarIcon, Download } from 'lucide-react';
 import { format, subDays } from 'date-fns';
 import { arSA } from 'date-fns/locale';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -140,7 +140,7 @@ export function Dashboard() {
                 <Label>{t('report-date-label')}</Label>
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant={"outline"} className="w-[280px] justify-start text-left font-normal">
+                    <Button variant={"outline"} className="w-full sm:w-[280px] justify-start text-left font-normal">
                       <CalendarIcon className="mr-2 h-4 w-4" />
                       {date ? format(date, 'PPP', { locale: language === 'ar' ? arSA : undefined }) : <span>{t('report-date-label')}</span>}
                     </Button>
@@ -164,7 +164,7 @@ export function Dashboard() {
             <CardTitle className="text-sm font-medium">
               {t('todays-sales-label')}
             </CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <img src="/sar.png" alt="SAR" width="16" height="16" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{reportData.totalSales.toFixed(2)} {t('sar')}</div>
@@ -178,7 +178,7 @@ export function Dashboard() {
             <CardTitle className="text-sm font-medium">
               {t('washes-completed-label')}
             </CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <img src="/sar.png" alt="SAR" width="16" height="16" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{services.length}</div>
@@ -220,47 +220,49 @@ export function Dashboard() {
           <CardTitle>{t('services-list-label')}</CardTitle>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t('table-header-time')}</TableHead>
-                <TableHead>{t('table-header-service')}</TableHead>
-                <TableHead>{t('table-header-size')}</TableHead>
-                <TableHead>{t('table-header-contact')}</TableHead>
-                <TableHead>{t('table-header-staff')}</TableHead>
-                <TableHead>{t('table-header-payment-method')}</TableHead>
-                <TableHead className="text-right">{t('table-header-price')}</TableHead>
-                <TableHead className="text-right">{t('table-header-commission')}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {services.length > 0 ? (
-                services.map((s: Service) => (
-                  <TableRow key={s.id}>
-                    <TableCell>{format(new Date(s.timestamp), 'p', { locale: language === 'ar' ? arSA : undefined })}</TableCell>
-                    <TableCell>{getServiceTypeName(s)}</TableCell>
-                    <TableCell>{getCarSizeName(s.carSize)}</TableCell>
-                    <TableCell>{s.customerContact || '-'}</TableCell>
-                    <TableCell>{language === 'ar' ? s.staffName : s.staffNameEn}</TableCell>
-                    <TableCell>{getPaymentMethodName(s)}</TableCell>
-                    <TableCell className="text-right">{s.price}</TableCell>
-                    <TableCell className="text-right">{s.commission}</TableCell>
-                  </TableRow>
-                ))
-              ) : (
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center">{t('no-records-text')}</TableCell>
+                  <TableHead>{t('table-header-time')}</TableHead>
+                  <TableHead>{t('table-header-service')}</TableHead>
+                  <TableHead>{t('table-header-size')}</TableHead>
+                  <TableHead>{t('table-header-contact')}</TableHead>
+                  <TableHead>{t('table-header-staff')}</TableHead>
+                  <TableHead>{t('table-header-payment-method')}</TableHead>
+                  <TableHead className="text-right">{t('table-header-price')}</TableHead>
+                  <TableHead className="text-right">{t('table-header-commission')}</TableHead>
                 </TableRow>
-              )}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TableCell colSpan={6} className="font-bold">{t('table-footer-totals')}</TableCell>
-                <TableCell className="text-right font-bold">{reportData.totalSales} {t('sar')}</TableCell>
-                <TableCell className="text-right font-bold">{reportData.totalCommissions} {t('sar')}</TableCell>
-              </TableRow>
-            </TableFooter>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {services.length > 0 ? (
+                  services.map((s: Service) => (
+                    <TableRow key={s.id}>
+                      <TableCell>{format(new Date(s.timestamp), 'p', { locale: language === 'ar' ? arSA : undefined })}</TableCell>
+                      <TableCell>{getServiceTypeName(s)}</TableCell>
+                      <TableCell>{getCarSizeName(s.carSize)}</TableCell>
+                      <TableCell>{s.customerContact || '-'}</TableCell>
+                      <TableCell>{language === 'ar' ? s.staffName : s.staffNameEn}</TableCell>
+                      <TableCell>{getPaymentMethodName(s)}</TableCell>
+                      <TableCell className="text-right">{s.price}</TableCell>
+                      <TableCell className="text-right">{s.commission}</TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={8} className="text-center">{t('no-records-text')}</TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TableCell colSpan={6} className="font-bold">{t('table-footer-totals')}</TableCell>
+                  <TableCell className="text-right font-bold">{reportData.totalSales} {t('sar')}</TableCell>
+                  <TableCell className="text-right font-bold">{reportData.totalCommissions} {t('sar')}</TableCell>
+                </TableRow>
+              </TableFooter>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

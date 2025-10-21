@@ -173,8 +173,8 @@ export function ManageServices() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <div className="flex justify-between items-center">
-            <div>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+            <div className="mb-4 sm:mb-0">
               <CardTitle className="text-3xl">{t('service-types-page-title')}</CardTitle>
               <CardDescription>{t('service-types-page-description')}</CardDescription>
             </div>
@@ -195,51 +195,53 @@ export function ManageServices() {
           </div>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t('service-type-label')}</TableHead>
-                <TableHead>{t('requires-car-size-label')}</TableHead>
-                <TableHead>{t('has-coupon-label')}</TableHead>
-                <TableHead className="text-right">{t('actions-label')}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {serviceConfigs.map(config => (
-                <TableRow key={config.id}>
-                  <TableCell>{getServiceDisplayName(config)}</TableCell>
-                  <TableCell>{config.needsSize ? t('yes-text') : t('no-text')}</TableCell>
-                  <TableCell>{config.hasCoupon ? t('yes-text') : t('no-text')}</TableCell>
-                  <TableCell className="text-right">
-                      <Button variant="ghost" size="icon" onClick={() => openDialog(config)}>
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant="ghost" size="icon" className="text-destructive">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>{t('delete-service-type-title')}</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            {t('delete-service-type-description')}
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>{t('cancel-btn')}</AlertDialogCancel>
-                          <AlertDialogAction onClick={() => removeServiceConfig(config.id)}>
-                            {t('delete-btn')}
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t('service-type-label')}</TableHead>
+                  <TableHead>{t('requires-car-size-label')}</TableHead>
+                  <TableHead>{t('has-coupon-label')}</TableHead>
+                  <TableHead className="text-right">{t('actions-label')}</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {serviceConfigs.map(config => (
+                  <TableRow key={config.id}>
+                    <TableCell>{getServiceDisplayName(config)}</TableCell>
+                    <TableCell>{config.needsSize ? t('yes-text') : t('no-text')}</TableCell>
+                    <TableCell>{config.hasCoupon ? t('yes-text') : t('no-text')}</TableCell>
+                    <TableCell className="text-right">
+                        <Button variant="ghost" size="icon" onClick={() => openDialog(config)}>
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="ghost" size="icon" className="text-destructive">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>{t('delete-service-type-title')}</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              {t('delete-service-type-description')}
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>{t('cancel-btn')}</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => removeServiceConfig(config.id)}>
+                              {t('delete-btn')}
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

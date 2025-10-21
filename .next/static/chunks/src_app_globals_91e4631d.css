@@ -1256,6 +1256,10 @@ body {
   overflow: hidden;
 }
 
+.overflow-x-auto {
+  overflow-x: auto;
+}
+
 .overflow-y-auto {
   overflow-y: auto;
 }
@@ -2902,12 +2906,20 @@ body {
     margin-top: 0;
   }
 
+  .sm\:mb-0 {
+    margin-bottom: 0;
+  }
+
   .sm\:flex {
     display: flex;
   }
 
   .sm\:w-auto {
     width: auto;
+  }
+
+  .sm\:w-\[280px\] {
+    width: 280px;
   }
 
   .sm\:max-w-2xl {
@@ -2928,6 +2940,10 @@ body {
 
   .sm\:flex-col {
     flex-direction: column;
+  }
+
+  .sm\:items-center {
+    align-items: center;
   }
 
   .sm\:justify-end {
