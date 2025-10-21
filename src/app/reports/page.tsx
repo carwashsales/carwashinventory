@@ -1,43 +1,50 @@
 'use client';
 
-import { useState } from 'react';
-import { useApp } from '@/hooks/use-app';
 import { Button } from '@/components/ui/button';
-import { DateRangePicker } from '@/components/ui/date-range-picker';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Download } from 'lucide-react';
 
 export default function ReportsPage() {
-  const { t } = useApp();
-  const [dateRange, setDateRange] = useState<{ from: Date; to: Date } | undefined>();
-
-  const handleGenerateReport = () => {
-    // TODO: Implement report generation based on dateRange
-    console.log('Generating report for:', dateRange);
-  };
-
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">{t('reports-title')}</h1>
-      </div>
-
-      <div className="space-y-4">
-        <div className="flex items-center gap-4">
-          <DateRangePicker onUpdate={(range) => setDateRange(range.range)} />
-          <Button onClick={handleGenerateReport} disabled={!dateRange}>
-            {t('generate-report-btn')}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Reports</CardTitle>
+          <Button>
+            <Download className="h-4 w-4 mr-2" />
+            Export to Excel
           </Button>
-        </div>
-      </div>
-
-      <div>
-        <h2 className="text-xl font-semibold mb-2">{t('available-reports-title')}</h2>
-        <ul className="list-disc list-inside">
-          <li>{t('commission-report-link')}</li>
-          <li>{t('services-report-link')}</li>
-          <li>{t('expenses-report-link')}</li>
-        </ul>
-      </div>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Date</TableHead>
+                <TableHead>Report Name</TableHead>
+                <TableHead className="text-right">Amount</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell>2024-07-28</TableCell>
+                <TableCell>Daily Sales Summary</TableCell>
+                <TableCell className="text-right">$5,432.10</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>2024-07-28</TableCell>
+                <TableCell>Staff Commission Report</TableCell>
+                <TableCell className="text-right">$1,234.50</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>2024-07-27</TableCell>
+                <TableCell>Daily Sales Summary</TableCell>
+                <TableCell className="text-right">$4,890.75</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </div>
   );
 }

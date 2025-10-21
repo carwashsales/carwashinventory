@@ -24,7 +24,7 @@ function Home() {
         "Home.useEffect": ()=>{
             if (isInitialized) {
                 if (isAuthenticated) {
-                    router.push('/home');
+                    router.push('/dashboard');
                 } else {
                     router.push('/login');
                 }
