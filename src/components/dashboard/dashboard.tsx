@@ -10,39 +10,19 @@ import { Calendar } from '@/components/ui/calendar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from '@/components/ui/table';
 import { Label } from '@/components/ui/label';
 import { Calendar as CalendarIcon, Download } from 'lucide-react';
-import { format, subDays } from 'date-fns';
+import { format } from 'date-fns';
 import { arSA } from 'date-fns/locale';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 export function Dashboard() {
-  const { t, language, services, loadServicesForDate, serviceConfigs, allServices, loadAllServices } = useApp();
+  const { t, language, services, loadServicesForDate, serviceConfigs } = useApp();
   const [date, setDate] = useState<Date | undefined>(new Date());
-  const [yesterdayServices, setYesterdayServices] = useState<Service[]>([]);
-
-  useEffect(() => {
-    if (allServices.length === 0) {
-      loadAllServices();
-    }
-  },[allServices, loadAllServices]);
-
-  const handleDateSelect = useCallback((selectedDate: Date | undefined) => {
-    setDate(selectedDate);
-    if (selectedDate) {
-      loadServicesForDate(selectedDate);
-      const yesterday = subDays(selectedDate, 1);
-      const yesterdayData = allServices.filter(s => s.timestamp.startsWith(yesterday.toISOString().split('T')[0]));
-      setYesterdayServices(yesterdayData);
-    }
-  }, [loadServicesForDate, allServices]);
 
   useEffect(() => {
     if (date) {
       loadServicesForDate(date);
-      const yesterday = subDays(date, 1);
-      const yesterdayData = allServices.filter(s => s.timestamp.startsWith(yesterday.toISOString().split('T')[0]));
-      setYesterdayServices(yesterdayData);
     }
-  }, [date, loadServicesForDate, allServices]);
+  }, [date, loadServicesForDate]);
 
   const reportData = useMemo(() => {
     let totalSales = 0;
@@ -62,17 +42,6 @@ export function Dashboard() {
 
     return { totalSales, totalCommissions, staffCommissions };
   }, [services, language]);
-
-  const yesterdayTotalSales = useMemo(() => {
-    return yesterdayServices.reduce((acc, service) => acc + service.price, 0);
-  }, [yesterdayServices]);
-
-  const salesDifference = useMemo(() => {
-    if (yesterdayTotalSales === 0) {
-      return reportData.totalSales > 0 ? 100 : 0;
-    }
-    return ((reportData.totalSales - yesterdayTotalSales) / yesterdayTotalSales) * 100;
-  }, [reportData.totalSales, yesterdayTotalSales]);
 
   const paymentBreakdown = useMemo(() => {
     const cash = services.filter(s => s.paymentMethod === 'cash').reduce((acc, s) => acc + s.price, 0);
@@ -146,11 +115,11 @@ export function Dashboard() {
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
-                    <Calendar mode="single" selected={date} onSelect={handleDateSelect} initialFocus />
+                    <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
                   </PopoverContent>
                 </Popover>
               </div>
-            <Button onClick={exportToCsv} disabled={services.length === 0}>
+            <Button onClick={exportToCsv} disabled={services.length === 0} className="w-full sm:w-auto">
               <Download className="h-4 w-4" />
               <span>{t('export-csv-text')}</span>
             </Button>
@@ -158,7 +127,7 @@ export function Dashboard() {
         </CardContent>
       </Card>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
@@ -168,9 +137,6 @@ export function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{reportData.totalSales.toFixed(2)} {t('sar')}</div>
-            <p className="text-xs text-muted-foreground">
-              {salesDifference.toFixed(1)}% {t('from-yesterday-label')}
-            </p>
           </CardContent>
         </Card>
         <Card>

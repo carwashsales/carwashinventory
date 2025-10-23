@@ -843,12 +843,19 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$constants$2e$t
 ;
 ;
 ;
+const t = (language, key)=>{
+    const translation = __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$translations$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["translations"][language][key] || __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$translations$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["translations"].en[key];
+    if (!translation) {
+        const keyStr = key;
+        return keyStr.replace(/-/g, ' ').replace(/\b\w/g, (l)=>l.toUpperCase());
+    }
+    return translation;
+};
 const AppContext = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["createContext"])(null);
 function AppProvider({ children }) {
     const [language, setLanguageState] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('ar');
     const [user, setUser] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
     const [services, setServices] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
-    const [allServices, setAllServices] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
     const [staff, setStaff] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
     const [serviceConfigs, setServiceConfigs] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
     const [inventoryItems, setInventoryItems] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
@@ -857,24 +864,21 @@ function AppProvider({ children }) {
     const [isLoading, setIsLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(true);
     const [isInitialized, setIsInitialized] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
     const { toast } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$hooks$2f$use$2d$toast$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useToast"])();
+    const langRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(language);
     const isAuthenticated = !!user;
     const setLanguage = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])((lang)=>{
         setLanguageState(lang);
+        langRef.current = lang;
         if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
         ;
     }, []);
-    const t = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])((key)=>{
-        const translation = __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$translations$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["translations"][language][key] || __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$translations$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["translations"].en[key];
-        if (!translation) {
-            const keyStr = key;
-            return keyStr.replace(/-/g, ' ').replace(/\b\w/g, (l)=>l.toUpperCase());
-        }
-        return translation;
+    const t_ = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])((key)=>{
+        return t(language, key);
     }, [
         language
     ]);
-    const showLoading = ()=>setIsLoading(true);
-    const hideLoading = ()=>setIsLoading(false);
+    const showLoading = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])(()=>setIsLoading(true), []);
+    const hideLoading = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])(()=>setIsLoading(false), []);
     const loadServiceConfigs = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])(async (currentUserId)=>{
         try {
             const { data, error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('service_configs').select('*').eq('userId', currentUserId);
@@ -905,7 +909,7 @@ function AppProvider({ children }) {
                     }));
                 setServiceConfigs(formattedInsertedData);
                 toast({
-                    title: t('service-type-added-success')
+                    title: t(langRef.current, 'service-type-added-success')
                 });
                 return formattedInsertedData;
             } else {
@@ -916,14 +920,13 @@ function AppProvider({ children }) {
         } catch (error) {
             console.error("Error loading service configs:", error);
             toast({
-                title: t('service-type-updated-failed'),
+                title: t(langRef.current, 'service-type-updated-failed'),
                 variant: "destructive"
             });
             return [];
         }
     }, [
-        toast,
-        t
+        toast
     ]);
     const addServiceConfig = async (config)=>{
         if (!user) return;
@@ -937,12 +940,12 @@ function AppProvider({ children }) {
             if (error) throw error;
             await loadServiceConfigs(user.id);
             toast({
-                title: t('service-type-added-success')
+                title: t(langRef.current, 'service-type-added-success')
             });
         } catch (e) {
             console.error("Error adding service config:", e);
             toast({
-                title: t('service-type-added-failed'),
+                title: t(langRef.current, 'service-type-added-failed'),
                 variant: "destructive"
             });
         } finally{
@@ -958,12 +961,12 @@ function AppProvider({ children }) {
             if (error) throw error;
             await loadServiceConfigs(user.id);
             toast({
-                title: t('service-type-updated-success')
+                title: t(langRef.current, 'service-type-updated-success')
             });
         } catch (e) {
             console.error("Error updating service config:", e);
             toast({
-                title: t('service-type-updated-failed'),
+                title: t(langRef.current, 'service-type-updated-failed'),
                 variant: "destructive"
             });
         } finally{
@@ -978,12 +981,12 @@ function AppProvider({ children }) {
             if (error) throw error;
             await loadServiceConfigs(user.id);
             toast({
-                title: t('service-type-removed-success')
+                title: t(langRef.current, 'service-type-removed-success')
             });
         } catch (e) {
             console.error("Error deleting service config:", e);
             toast({
-                title: t('service-type-removed-failed'),
+                title: t(langRef.current, 'service-type-removed-failed'),
                 variant: "destructive"
             });
         } finally{
@@ -1001,7 +1004,7 @@ function AppProvider({ children }) {
         } catch (error) {
             console.error(error);
             toast({
-                title: t('login-failed'),
+                title: t(langRef.current, 'login-failed'),
                 variant: 'destructive'
             });
         } finally{
@@ -1017,14 +1020,14 @@ function AppProvider({ children }) {
             });
             if (error) throw error;
             toast({
-                title: t('signup-success-title'),
-                description: t('signup-success-description'),
+                title: t(langRef.current, 'signup-success-title'),
+                description: t(langRef.current, 'signup-success-description'),
                 variant: 'default'
             });
         } catch (error) {
             console.error(error);
             toast({
-                title: t('signup-failed'),
+                title: t(langRef.current, 'signup-failed'),
                 variant: 'destructive'
             });
         } finally{
@@ -1037,7 +1040,6 @@ function AppProvider({ children }) {
             await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].auth.signOut();
             setStaff([]);
             setServices([]);
-            setAllServices([]);
             setServiceConfigs([]);
             setInventoryItems([]);
             setExpenses([]);
@@ -1074,12 +1076,12 @@ function AppProvider({ children }) {
             if (error) throw error;
             await loadStaff(user.id);
             toast({
-                title: t('staff-added-success')
+                title: t(langRef.current, 'staff-added-success')
             });
         } catch (error) {
             console.error('Error adding staff:', error);
             toast({
-                title: t('staff-added-failed'),
+                title: t(langRef.current, 'staff-added-failed'),
                 variant: 'destructive'
             });
         } finally{
@@ -1094,23 +1096,24 @@ function AppProvider({ children }) {
             if (error) throw error;
             await loadStaff(user.id);
             toast({
-                title: t('staff-removed-success')
+                title: t(langRef.current, 'staff-removed-success')
             });
         } catch (error) {
             console.error('Error removing staff:', error);
             toast({
-                title: t('staff-removed-failed'),
+                title: t(langRef.current, 'staff-removed-failed'),
                 variant: 'destructive'
             });
         } finally{
             hideLoading();
         }
     };
-    const loadAllServices = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])(async ()=>{
-        if (!user) return;
+    const _loadServicesForDate = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])(async (userId, date)=>{
         showLoading();
         try {
-            const { data, error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('services').select('*').eq('userId', user.id).order('timestamp', {
+            const startOfDay = new Date(date.setHours(0, 0, 0, 0)).toISOString();
+            const endOfDay = new Date(date.setHours(23, 59, 59, 999)).toISOString();
+            const { data, error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('services').select('*').eq('userId', userId).gte('timestamp', startOfDay).lte('timestamp', endOfDay).order('timestamp', {
                 ascending: false
             });
             if (error) throw error;
@@ -1119,26 +1122,29 @@ function AppProvider({ children }) {
                     id: String(s.id),
                     staffId: String(s.staffId)
                 }));
-            setAllServices(formattedServices);
+            setServices(formattedServices);
         } catch (error) {
-            console.error('Error loading all services: ', error);
+            console.error('Error loading services for date: ', error);
             toast({
-                title: 'Failed to load services data.',
+                title: t(langRef.current, 'Failed to load services data.'),
                 variant: 'destructive'
             });
-            setAllServices([]);
+            setServices([]);
         } finally{
             hideLoading();
         }
     }, [
         toast,
-        user
+        showLoading,
+        hideLoading
     ]);
-    const loadServicesForDate = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])((date)=>{
-        const dailyServices = allServices.filter((service)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$isSameDay$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["isSameDay"])(new Date(service.timestamp), date)).sort((a, b)=>new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-        setServices(dailyServices);
+    const loadServicesForDate = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])(async (date)=>{
+        if (user) {
+            await _loadServicesForDate(user.id, date);
+        }
     }, [
-        allServices
+        user,
+        _loadServicesForDate
     ]);
     const addService = async (serviceData)=>{
         if (!user) return;
@@ -1158,11 +1164,6 @@ function AppProvider({ children }) {
                 id: String(data[0].id),
                 staffId: String(data[0].staffId)
             };
-            const updatedAllServices = [
-                newServiceForState,
-                ...allServices
-            ];
-            setAllServices(updatedAllServices);
             if ((0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$isSameDay$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["isSameDay"])(new Date(newServiceForState.timestamp), new Date())) {
                 setServices((prev)=>[
                         newServiceForState,
@@ -1170,12 +1171,12 @@ function AppProvider({ children }) {
                     ].sort((a, b)=>new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
             }
             toast({
-                title: t('service-saved')
+                title: t(langRef.current, 'service-saved')
             });
         } catch (error) {
             console.error('Error adding service: ', error);
             toast({
-                title: 'Failed to save service',
+                title: t(langRef.current, 'Failed to save service'),
                 variant: 'destructive'
             });
         } finally{
@@ -1355,12 +1356,12 @@ function AppProvider({ children }) {
             if (error) throw error;
             await loadProductTypes(user.id);
             toast({
-                title: t('product-type-added-success')
+                title: t(langRef.current, 'product-type-added-success')
             });
         } catch (error) {
             console.error('Error adding product type:', error);
             toast({
-                title: t('product-type-added-failed'),
+                title: t(langRef.current, 'product-type-added-failed'),
                 variant: 'destructive'
             });
         } finally{
@@ -1378,12 +1379,12 @@ function AppProvider({ children }) {
             if (error) throw error;
             await loadProductTypes(user.id);
             toast({
-                title: t('product-type-updated-success')
+                title: t(langRef.current, 'product-type-updated-success')
             });
         } catch (error) {
             console.error('Error updating product type:', error);
             toast({
-                title: t('product-type-updated-failed'),
+                title: t(langRef.current, 'product-type-updated-failed'),
                 variant: 'destructive'
             });
         } finally{
@@ -1398,69 +1399,33 @@ function AppProvider({ children }) {
             if (error) throw error;
             await loadProductTypes(user.id);
             toast({
-                title: t('product-type-removed-success')
+                title: t(langRef.current, 'product-type-removed-success')
             });
         } catch (error) {
             console.error('Error removing product type:', error);
             toast({
-                title: t('product-type-removed-failed'),
+                title: t(langRef.current, 'product-type-removed-failed'),
                 variant: 'destructive'
             });
         } finally{
             hideLoading();
         }
     };
-    const loadAllData = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])(async ()=>{
-        if (!user) return;
-        showLoading();
-        try {
-            await Promise.all([
-                loadAllServices(),
-                loadInventoryItems(user.id),
-                loadExpenses(user.id),
-                loadProductTypes(user.id)
-            ]);
-        } catch (e) {
-            console.error("Failed to load all data", e);
-            toast({
-                title: 'Failed to load all data',
-                variant: 'destructive'
-            });
-        } finally{
-            hideLoading();
-        }
-    }, [
-        user,
-        loadAllServices,
-        loadInventoryItems,
-        loadExpenses,
-        loadProductTypes,
-        toast
-    ]);
     const loadInitialData = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])(async (currentUser)=>{
         showLoading();
         try {
             await Promise.all([
                 loadStaff(currentUser.id),
-                loadServiceConfigs(currentUser.id)
+                loadServiceConfigs(currentUser.id),
+                loadInventoryItems(currentUser.id),
+                loadExpenses(currentUser.id),
+                loadProductTypes(currentUser.id),
+                _loadServicesForDate(currentUser.id, new Date())
             ]);
-            const today = new Date();
-            const startOfDay = new Date(today.setHours(0, 0, 0, 0)).toISOString();
-            const endOfDay = new Date(today.setHours(23, 59, 59, 999)).toISOString();
-            const { data, error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('services').select('*').eq('userId', currentUser.id).gte('timestamp', startOfDay).lte('timestamp', endOfDay).order('timestamp', {
-                ascending: false
-            });
-            if (error) throw error;
-            const formattedServices = data.map((s)=>({
-                    ...s,
-                    id: String(s.id),
-                    staffId: String(s.staffId)
-                }));
-            setServices(formattedServices);
         } catch (e) {
             console.error("Failed to load initial data", e);
             toast({
-                title: 'Failed to load initial data',
+                title: t(langRef.current, 'Failed to load initial data'),
                 variant: 'destructive'
             });
         } finally{
@@ -1469,6 +1434,12 @@ function AppProvider({ children }) {
     }, [
         loadStaff,
         loadServiceConfigs,
+        loadInventoryItems,
+        loadExpenses,
+        loadProductTypes,
+        _loadServicesForDate,
+        showLoading,
+        hideLoading,
         toast
     ]);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
@@ -1476,16 +1447,13 @@ function AppProvider({ children }) {
             const currentUser = session?.user ?? null;
             setUser(currentUser);
             if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN') {
-                setIsLoading(true);
                 if (currentUser) {
                     await loadInitialData(currentUser);
                 }
                 setIsInitialized(true);
-                setIsLoading(false);
             } else if (event === 'SIGNED_OUT') {
                 setStaff([]);
                 setServices([]);
-                setAllServices([]);
                 setServiceConfigs([]);
                 setInventoryItems([]);
                 setExpenses([]);
@@ -1503,15 +1471,13 @@ function AppProvider({ children }) {
     const value = {
         language,
         setLanguage,
-        t,
+        t: t_,
         isAuthenticated,
         user,
         login,
         signUp,
         logout,
         services,
-        allServices,
-        loadAllServices,
         staff,
         addStaff,
         removeStaff,
@@ -1534,15 +1500,14 @@ function AppProvider({ children }) {
         productTypes,
         addProductType,
         updateProductType,
-        removeProductType,
-        loadAllData
+        removeProductType
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(AppContext.Provider, {
         value: value,
         children: children
     }, void 0, false, {
         fileName: "[project]/src/contexts/app-context.tsx",
-        lineNumber: 657,
+        lineNumber: 622,
         columnNumber: 10
     }, this);
 }

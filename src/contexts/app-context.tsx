@@ -2,7 +2,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { createContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useState, useEffect, useCallback, useRef } from 'react';
 import { translations, type Language } from '@/lib/translations';
 import type { Service, Staff, ServiceConfig, InventoryItem, Expense, ProductType } from '@/types';
 import { useToast } from '@/hooks/use-toast';
@@ -10,6 +10,15 @@ import { supabase } from '@/lib/supabaseClient';
 import { isSameDay } from 'date-fns';
 import { SERVICE_TYPES } from '@/lib/constants';
 import type { User } from '@supabase/supabase-js';
+
+const t = (language: Language, key: keyof typeof translations.en): string => {
+  const translation = translations[language][key] || translations.en[key];
+  if (!translation) {
+    const keyStr = key as string;
+    return keyStr.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  }
+  return translation;
+};
 
 export interface AppContextType {
   language: Language;
@@ -21,8 +30,6 @@ export interface AppContextType {
   signUp: (user: string, pass: string) => void;
   logout: () => void;
   services: Service[];
-  allServices: Service[];
-  loadAllServices: () => Promise<void>;
   staff: Staff[];
   addStaff: (name: string, nameEn: string) => void;
   removeStaff: (id: string) => void;
@@ -46,7 +53,6 @@ export interface AppContextType {
   addProductType: (nameEn: string, nameAr: string) => Promise<void>;
   updateProductType: (id: string, nameEn: string, nameAr: string) => Promise<void>;
   removeProductType: (id: string) => Promise<void>;
-  loadAllData: () => Promise<void>;
 }
 
 export const AppContext = createContext<AppContextType | null>(null);
@@ -55,7 +61,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<Language>('ar');
   const [user, setUser] = useState<User | null>(null);
   const [services, setServices] = useState<Service[]>([]);
-  const [allServices, setAllServices] = useState<Service[]>([]);
   const [staff, setStaff] = useState<Staff[]>([]);
   const [serviceConfigs, setServiceConfigs] = useState<ServiceConfig[]>([]);
   const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
@@ -65,27 +70,25 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [isInitialized, setIsInitialized] = useState(false);
   const { toast } = useToast();
 
+  const langRef = useRef(language);
+
   const isAuthenticated = !!user;
 
   const setLanguage = useCallback((lang: Language) => {
     setLanguageState(lang);
+    langRef.current = lang;
     if (typeof window !== 'undefined') {
       document.documentElement.lang = lang;
       document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
     }
   }, []);
 
-  const t = useCallback((key: keyof typeof translations.en): string => {
-    const translation = translations[language][key] || translations.en[key];
-    if (!translation) {
-      const keyStr = key as string;
-      return keyStr.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-    }
-    return translation;
+  const t_ = useCallback((key: keyof typeof translations.en): string => {
+    return t(language, key);
   }, [language]);
 
-  const showLoading = () => setIsLoading(true);
-  const hideLoading = () => setIsLoading(false);
+  const showLoading = useCallback(() => setIsLoading(true), []);
+  const hideLoading = useCallback(() => setIsLoading(false), []);
 
   const loadServiceConfigs = useCallback(async (currentUserId: string): Promise<ServiceConfig[]> => {
     try {
@@ -120,7 +123,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
         const formattedInsertedData = insertedData.map(config => ({ ...config, id: String(config.id) }));
         setServiceConfigs(formattedInsertedData);
-        toast({ title: t('service-type-added-success')});
+        toast({ title: t(langRef.current, 'service-type-added-success')});
         return formattedInsertedData;
       } else {
         const configs = formattedData.sort((a, b) => a.name.localeCompare(b.name));
@@ -129,10 +132,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
     } catch (error) {
       console.error("Error loading service configs:", error);
-      toast({ title: t('service-type-updated-failed'), variant: "destructive" });
+      toast({ title: t(langRef.current, 'service-type-updated-failed'), variant: "destructive" });
       return [];
     }
-  }, [toast, t]);
+  }, [toast]);
 
   const addServiceConfig = async (config: Omit<ServiceConfig, 'id' | 'userId'>) => {
     if (!user) return;
@@ -142,10 +145,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
         const { error } = await supabase.from('service_configs').insert(newConfig);
         if (error) throw error;
         await loadServiceConfigs(user.id);
-        toast({ title: t('service-type-added-success')});
+        toast({ title: t(langRef.current, 'service-type-added-success')});
     } catch(e) {
         console.error("Error adding service config:", e);
-        toast({ title: t('service-type-added-failed'), variant: "destructive"});
+        toast({ title: t(langRef.current, 'service-type-added-failed'), variant: "destructive"});
     } finally {
         hideLoading();
     }
@@ -159,10 +162,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
         const { error } = await supabase.from('service_configs').update(configData).eq('id', id);
         if (error) throw error;
         await loadServiceConfigs(user.id);
-        toast({ title: t('service-type-updated-success')});
+        toast({ title: t(langRef.current, 'service-type-updated-success')});
     } catch(e) {
         console.error("Error updating service config:", e);
-        toast({ title: t('service-type-updated-failed'), variant: "destructive"});
+        toast({ title: t(langRef.current, 'service-type-updated-failed'), variant: "destructive"});
     } finally {
         hideLoading();
     }
@@ -175,10 +178,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
         const { error } = await supabase.from('service_configs').delete().eq('id', id);
         if (error) throw error;
         await loadServiceConfigs(user.id);
-        toast({ title: t('service-type-removed-success')});
+        toast({ title: t(langRef.current, 'service-type-removed-success')});
     } catch(e) {
         console.error("Error deleting service config:", e);
-        toast({ title: t('service-type-removed-failed'), variant: "destructive"});
+        toast({ title: t(langRef.current, 'service-type-removed-failed'), variant: "destructive"});
     } finally {
         hideLoading();
     }
@@ -192,7 +195,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       console.error(error);
       toast({
-        title: t('login-failed'),
+        title: t(langRef.current, 'login-failed'),
         variant: 'destructive',
       });
     } finally {
@@ -206,14 +209,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.signUp({ email, password });
       if (error) throw error;
       toast({
-        title: t('signup-success-title'),
-        description: t('signup-success-description'),
+        title: t(langRef.current, 'signup-success-title'),
+        description: t(langRef.current, 'signup-success-description'),
         variant: 'default',
       });
     } catch (error) {
       console.error(error);
       toast({
-        title: t('signup-failed'),
+        title: t(langRef.current, 'signup-failed'),
         variant: 'destructive',
       });
     } finally {
@@ -227,7 +230,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
       await supabase.auth.signOut();
       setStaff([]);
       setServices([]);
-      setAllServices([]);
       setServiceConfigs([]);
       setInventoryItems([]);
       setExpenses([]);
@@ -262,10 +264,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.from('staff').insert({ name, nameEn, userId: user.id });
       if (error) throw error;
       await loadStaff(user.id);
-      toast({ title: t('staff-added-success') });
+      toast({ title: t(langRef.current, 'staff-added-success') });
     } catch (error) {
       console.error('Error adding staff:', error);
-      toast({ title: t('staff-added-failed'), variant: 'destructive' });
+      toast({ title: t(langRef.current, 'staff-added-failed'), variant: 'destructive' });
     } finally {
       hideLoading();
     }
@@ -278,43 +280,46 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.from('staff').delete().eq('id', id);
       if (error) throw error;
       await loadStaff(user.id);
-      toast({ title: t('staff-removed-success') });
+      toast({ title: t(langRef.current, 'staff-removed-success') });
     } catch (error) {
       console.error('Error removing staff:', error);
-      toast({ title: t('staff-removed-failed'), variant: 'destructive' });
+      toast({ title: t(langRef.current, 'staff-removed-failed'), variant: 'destructive' });
     } finally {
       hideLoading();
     }
   };
 
-  const loadAllServices = useCallback(async () => {
-    if (!user) return;
+  const _loadServicesForDate = useCallback(async (userId: string, date: Date) => {
     showLoading();
     try {
+      const startOfDay = new Date(date.setHours(0, 0, 0, 0)).toISOString();
+      const endOfDay = new Date(date.setHours(23, 59, 59, 999)).toISOString();
+
       const { data, error } = await supabase
         .from('services')
         .select('*')
-        .eq('userId', user.id)
+        .eq('userId', userId)
+        .gte('timestamp', startOfDay)
+        .lte('timestamp', endOfDay)
         .order('timestamp', { ascending: false });
-      if (error) throw error;
 
+      if (error) throw error;
       const formattedServices = data.map(s => ({ ...s, id: String(s.id), staffId: String(s.staffId) }));
-      setAllServices(formattedServices as Service[]);
+      setServices(formattedServices as Service[]);
     } catch (error) {
-      console.error('Error loading all services: ', error);
-      toast({ title: 'Failed to load services data.', variant: 'destructive' });
-      setAllServices([]);
+      console.error('Error loading services for date: ', error);
+      toast({ title: t(langRef.current, 'Failed to load services data.'), variant: 'destructive' });
+      setServices([]);
     } finally {
       hideLoading();
     }
-  }, [toast, user]);
+  }, [toast, showLoading, hideLoading]);
 
-  const loadServicesForDate = useCallback((date: Date) => {
-    const dailyServices = allServices
-      .filter(service => isSameDay(new Date(service.timestamp), date))
-      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-    setServices(dailyServices);
-  }, [allServices]);
+  const loadServicesForDate = useCallback(async (date: Date) => {
+    if (user) {
+      await _loadServicesForDate(user.id, date);
+    }
+  }, [user, _loadServicesForDate]);
 
   const addService = async (serviceData: Omit<Service, 'id' | 'timestamp'>) => {
     if (!user) return;
@@ -334,18 +339,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
       const newServiceForState = { ...data[0], id: String(data[0].id), staffId: String(data[0].staffId) } as Service;
       
-      const updatedAllServices = [newServiceForState, ...allServices];
-      setAllServices(updatedAllServices);
-
       if(isSameDay(new Date(newServiceForState.timestamp), new Date())) {
         setServices(prev => [newServiceForState, ...prev].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
       }
 
-      toast({ title: t('service-saved') });
+      toast({ title: t(langRef.current, 'service-saved') });
     } catch (error)
     {
       console.error('Error adding service: ', error);
-      toast({ title: 'Failed to save service', variant: 'destructive' });
+      toast({ title: t(langRef.current, 'Failed to save service'), variant: 'destructive' });
     } finally {
       hideLoading();
     }
@@ -493,10 +495,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.from('product_types').insert({ name_en: nameEn, name_ar: nameAr, user_id: user.id });
       if (error) throw error;
       await loadProductTypes(user.id);
-      toast({ title: t('product-type-added-success') });
+      toast({ title: t(langRef.current, 'product-type-added-success') });
     } catch (error) {
       console.error('Error adding product type:', error);
-      toast({ title: t('product-type-added-failed'), variant: 'destructive' });
+      toast({ title: t(langRef.current, 'product-type-added-failed'), variant: 'destructive' });
     } finally {
       hideLoading();
     }
@@ -509,10 +511,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.from('product_types').update({ name_en: nameEn, name_ar: nameAr }).eq('id', id);
       if (error) throw error;
       await loadProductTypes(user.id);
-      toast({ title: t('product-type-updated-success') });
+      toast({ title: t(langRef.current, 'product-type-updated-success') });
     } catch (error) {
       console.error('Error updating product type:', error);
-      toast({ title: t('product-type-updated-failed'), variant: 'destructive' });
+      toast({ title: t(langRef.current, 'product-type-updated-failed'), variant: 'destructive' });
     } finally {
       hideLoading();
     }
@@ -525,81 +527,47 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.from('product_types').delete().eq('id', id);
       if (error) throw error;
       await loadProductTypes(user.id);
-      toast({ title: t('product-type-removed-success') });
+      toast({ title: t(langRef.current, 'product-type-removed-success') });
     } catch (error) {
       console.error('Error removing product type:', error);
-      toast({ title: t('product-type-removed-failed'), variant: 'destructive' });
+      toast({ title: t(langRef.current, 'product-type-removed-failed'), variant: 'destructive' });
     } finally {
       hideLoading();
     }
   };
   
-  const loadAllData = useCallback(async () => {
-    if (!user) return;
-    showLoading();
-    try {
-      await Promise.all([
-        loadAllServices(),
-        loadInventoryItems(user.id),
-        loadExpenses(user.id),
-        loadProductTypes(user.id),
-      ]);
-    } catch (e) {
-        console.error("Failed to load all data", e);
-        toast({ title: 'Failed to load all data', variant: 'destructive' });
-    } finally {
-        hideLoading();
-    }
-  }, [user, loadAllServices, loadInventoryItems, loadExpenses, loadProductTypes, toast]);
-
   const loadInitialData = useCallback(async (currentUser: User) => {
     showLoading();
     try {
-        await Promise.all([
-            loadStaff(currentUser.id),
-            loadServiceConfigs(currentUser.id),
-        ]);
-        const today = new Date();
-        const startOfDay = new Date(today.setHours(0, 0, 0, 0)).toISOString();
-        const endOfDay = new Date(today.setHours(23, 59, 59, 999)).toISOString();
-
-        const { data, error } = await supabase
-            .from('services')
-            .select('*')
-            .eq('userId', currentUser.id)
-            .gte('timestamp', startOfDay)
-            .lte('timestamp', endOfDay)
-            .order('timestamp', { ascending: false });
-
-        if (error) throw error;
-        const formattedServices = data.map(s => ({ ...s, id: String(s.id), staffId: String(s.staffId) }));
-        setServices(formattedServices as Service[]);
-
+      await Promise.all([
+        loadStaff(currentUser.id),
+        loadServiceConfigs(currentUser.id),
+        loadInventoryItems(currentUser.id),
+        loadExpenses(currentUser.id),
+        loadProductTypes(currentUser.id),
+        _loadServicesForDate(currentUser.id, new Date()),
+      ]);
     } catch (e) {
-        console.error("Failed to load initial data", e);
-        toast({ title: 'Failed to load initial data', variant: 'destructive' });
+      console.error("Failed to load initial data", e);
+      toast({ title: t(langRef.current, 'Failed to load initial data'), variant: 'destructive' });
     } finally {
-        hideLoading();
+      hideLoading();
     }
-  }, [loadStaff, loadServiceConfigs, toast]);
+  }, [loadStaff, loadServiceConfigs, loadInventoryItems, loadExpenses, loadProductTypes, _loadServicesForDate, showLoading, hideLoading, toast]);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      
       const currentUser = session?.user ?? null;
       setUser(currentUser);
 
       if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN') {
-        setIsLoading(true);
         if (currentUser) {
           await loadInitialData(currentUser);
         }
         setIsInitialized(true);
-        setIsLoading(false);
       } else if (event === 'SIGNED_OUT') {
         setStaff([]);
         setServices([]);
-        setAllServices([]);
         setServiceConfigs([]);
         setInventoryItems([]);
         setExpenses([]);
@@ -619,15 +587,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const value = {
     language,
     setLanguage,
-    t,
+    t: t_,
     isAuthenticated,
     user,
     login,
     signUp,
     logout,
     services,
-    allServices,
-    loadAllServices,
     staff,
     addStaff,
     removeStaff,
@@ -651,7 +617,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     addProductType,
     updateProductType,
     removeProductType,
-    loadAllData,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
